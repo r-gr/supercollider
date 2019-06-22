@@ -18,6 +18,9 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 */
 
+/* ADDITIONAL INCLUDES FOR VIDEO SERVER MODIFICATIONS */
+#include "SC_Video.h"             // for create_gl_image, create_gl_video, ...
+/* END ADDITIONAL INCLUDES */
 
 #include "SC_Lib.h"
 #include "SC_CoreAudio.h"
@@ -841,6 +844,17 @@ SCErr meth_s_new(World *inWorld, int inSize, char *inData, ReplyAddress* /*inRep
 		default: return kSCErr_Failed;
 	}
 	Node_StateMsg(&graph->mNode, kNode_Go);
+
+	/* CUSTOM GRAPH PROCESSING CODE FOR THE VIDEO SERVER */
+
+	for (uint32 i = 0; i < graph->mNumCalcUnits; i++) {
+		graph->mCalcUnits[i]->mUnitIndex = i;
+	}
+
+	process_graph(inWorld, graph);
+
+	/* END ADDED CODE */
+
 	return kSCErr_None;
 }
 
@@ -1874,6 +1888,99 @@ SCErr meth_error(World *inWorld, int inSize, char *inData, ReplyAddress* /*inRep
 	return kSCErr_None;
 }
 
+
+
+SCErr meth_gl_newWindow(World *inWorld, int inSize, char *inData, ReplyAddress *inReply);
+SCErr meth_gl_newWindow(World *inWorld, int inSize, char *inData, ReplyAddress *inReply)
+{
+	sc_msg_iter msg(inSize, inData);
+	int32 windowID = msg.geti();
+	int32 width = msg.geti();
+	int32 height = msg.geti();
+
+	create_gl_window(inWorld, windowID, width, height);
+
+	return kSCErr_None;
+}
+
+SCErr meth_gl_freeWindow(World *inWorld, int inSize, char *inData, ReplyAddress *inReply);
+SCErr meth_gl_freeWindow(World *inWorld, int inSize, char *inData, ReplyAddress *inReply)
+{
+	sc_msg_iter msg(inSize, inData);
+	int32 windowID = msg.geti();
+
+	free_gl_window(inWorld, windowID);
+
+	return kSCErr_None;
+}
+
+SCErr meth_gl_v_new(World *inWorld, int inSize, char *inData, ReplyAddress *inReply);
+SCErr meth_gl_v_new(World *inWorld, int inSize, char *inData, ReplyAddress *inReply)
+{
+	sc_msg_iter msg(inSize, inData);
+	int32 videoID = msg.geti();
+	const char* videoPath = msg.gets();
+	float rate = msg.getf();
+	int loop = msg.geti(); // booleans become integers 1 and 0?
+	int32 windowID = msg.geti();
+
+	create_gl_video(inWorld, videoID, videoPath, rate, loop, windowID);
+
+	return kSCErr_None;
+}
+
+SCErr meth_gl_v_read(World *inWorld, int inSize, char *inData, ReplyAddress *inReply);
+SCErr meth_gl_v_read(World *inWorld, int inSize, char *inData, ReplyAddress *inReply)
+{
+	sc_msg_iter msg(inSize, inData);
+	int32 videoID = msg.geti();
+	const char* videoPath = msg.gets();
+	float rate = msg.getf();
+	int loop = msg.geti(); // booleans become integers 1 and 0?
+	int32 windowID = msg.geti();
+
+	create_gl_read_video(inWorld, videoID, videoPath, rate, loop, windowID);
+
+	return kSCErr_None;
+}
+
+SCErr meth_gl_v_free(World *inWorld, int inSize, char *inData, ReplyAddress *inReply);
+SCErr meth_gl_v_free(World *inWorld, int inSize, char *inData, ReplyAddress *inReply)
+{
+	sc_msg_iter msg(inSize, inData);
+	int32 videoID = msg.geti();
+	int32 windowID = msg.geti();
+
+	free_gl_video(inWorld, videoID, windowID);
+
+	return kSCErr_None;
+}
+
+SCErr meth_gl_i_new(World *inWorld, int inSize, char *inData, ReplyAddress *inReply);
+SCErr meth_gl_i_new(World *inWorld, int inSize, char *inData, ReplyAddress *inReply)
+{
+	sc_msg_iter msg(inSize, inData);
+	int32 imageID = msg.geti();
+	const char* imagePath = msg.gets();
+	int32 windowID = msg.geti();
+
+	create_gl_image(inWorld, imageID, imagePath, windowID);
+
+	return kSCErr_None;
+}
+
+SCErr meth_gl_i_free(World *inWorld, int inSize, char *inData, ReplyAddress *inReply);
+SCErr meth_gl_i_free(World *inWorld, int inSize, char *inData, ReplyAddress *inReply)
+{
+	sc_msg_iter msg(inSize, inData);
+	int32 imageID = msg.geti();
+	int32 windowID = msg.geti();
+
+	free_gl_image(inWorld, imageID, windowID);
+
+	return kSCErr_None;
+}
+
 #define NEW_COMMAND(name) NewCommand(#name, cmd_##name, meth_##name)
 
 void initMiscCommands();
@@ -1964,4 +2071,12 @@ void initMiscCommands()
 	NEW_COMMAND(g_queryTree);
 
 	NEW_COMMAND(error);
+
+	NEW_COMMAND(gl_newWindow);
+	NEW_COMMAND(gl_freeWindow);
+	NEW_COMMAND(gl_v_new);
+	NEW_COMMAND(gl_v_read);
+	NEW_COMMAND(gl_v_free);
+	NEW_COMMAND(gl_i_new);
+	NEW_COMMAND(gl_i_free);
 }

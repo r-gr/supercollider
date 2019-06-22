@@ -46,6 +46,7 @@ set(scsynth_sources
 	SC_Str4.cpp
 	SC_Unit.cpp
 	SC_UnitDef.cpp
+	SC_Video.cpp
 	SC_World.cpp
 	Rendezvous.cpp
 
@@ -209,6 +210,8 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
 	target_link_libraries(libscsynth rt)
 endif()
 
+target_link_libraries(libscsynth -lzmq)
+
 add_executable(scsynth scsynth_main.cpp)
 target_link_libraries(scsynth libscsynth)
 
@@ -261,14 +264,14 @@ elseif(WIN32)
     add_custom_command(TARGET scsynth
       POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy_directory $<TARGET_FILE_DIR:scsynth> $<TARGET_FILE_DIR:sclang>
-      COMMENT "Adding scynth to target sclang"
+      COMMENT "Adding scsynth to target sclang"
     )
 
     if(SC_IDE)
       add_custom_command(TARGET scsynth
         POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory $<TARGET_FILE_DIR:scsynth> $<TARGET_FILE_DIR:SuperCollider>
-        COMMENT "Adding scynth to target SuperCollider"
+        COMMENT "Adding scsynth to target SuperCollider"
       )
     endif(SC_IDE)
 

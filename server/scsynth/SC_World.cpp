@@ -53,6 +53,10 @@
 # include <sys/param.h>
 #endif
 
+/* ADDITIONAL INCLUDES FOR VIDEO SERVER MODIFICATIONS */
+#include <zmq.h>                  // for zmq_ctx_new, zmq_socket, zmq_bind, ...
+/* END ADDITIONAL INCLUDES */
+
 #include "malloc_aligned.hpp"
 
 // undefine the shadowed scfft functions
@@ -468,7 +472,31 @@ World* World_New(WorldOptions *inOptions)
 			SC::Apple::disableAppNap();
 #endif
 
+			void *ctx = zmq_ctx_new();
+			if (!ctx) {
+				scprintf("could not create ZeroMQ context.\n");
+				return 0;
+			}
 
+			world->mZMQCtx = ctx;
+			world->mCmdMsgSock = zmq_socket(ctx, ZMQ_PUSH);
+			world->mDataMsgSock = zmq_socket(ctx, ZMQ_PUB);
+			if (!world->mCmdMsgSock || !world->mDataMsgSock) {
+				scprintf("could not create ZeroMQ sockets.\n");
+				return 0;
+			}
+
+			int rc;
+			rc = zmq_bind(world->mCmdMsgSock, "ipc://@sc-video_cmd-msgs");
+			if (rc != 0) {
+				scprintf("could not bind to ZeroMQ command message socket.\n");
+				return 0;
+			}
+			rc = zmq_bind(world->mDataMsgSock, "ipc://@sc-video_data-msgs");
+			if (rc != 0) {
+				scprintf("could not bind to ZeroMQ data message socket.\n");
+				return 0;
+			}
 		} else {
 			hw->mAudioDriver = 0;
 		}
@@ -1019,6 +1047,13 @@ void World_Cleanup(World *world, bool unload_plugins)
 	HiddenWorld *hw = world->hw;
 
 	if (hw && world->mRealTime) hw->mAudioDriver->Stop();
+
+
+	if (world->mRealTime) {
+		zmq_close(world->mCmdMsgSock);
+		zmq_close(world->mDataMsgSock);
+		zmq_ctx_term(world->mZMQCtx);
+	}
 
 	world->mRunning = false;
 

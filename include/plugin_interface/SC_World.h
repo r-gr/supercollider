@@ -105,6 +105,11 @@ struct World
 	nova::padded_rw_spinlock * mAudioBusLocks;
 	nova::spin_lock * mControlBusLock;
 #endif
+
+	// ZeroMQ context and sockets
+	void *mZMQCtx;
+	void *mCmdMsgSock;
+	void *mDataMsgSock;
 };
 
 inline SndBuf* World_GetBuf(struct World *inWorld, uint32 index)

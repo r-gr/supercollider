@@ -39,6 +39,7 @@ struct Unit
 	struct UnitDef *mUnitDef;
 	struct Graph *mParent;
 	uint32 mNumInputs, mNumOutputs; // changed from uint16 for synthdef ver 2
+	uint32 mUnitIndex; // added for scsynth-video to make units aware of their position in the graph
 	int16 mCalcRate;
 	int16 mSpecialIndex;		// used by unary and binary ops
 	int16 mParentIndex;

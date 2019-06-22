@@ -18,6 +18,9 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 */
 
+/* ADDITIONAL INCLUDES FOR VIDEO SERVER MODIFICATIONS */
+#include "SC_Video.h"             // for video_free_node
+/* END ADDITIONAL INCLUDES */
 
 #include "SC_Group.h"
 #include "SC_SynthDef.h"
@@ -127,7 +130,13 @@ void Node_Delete(Node* inNode)
 {
 	if (inNode->mID == 0) return; // failed
 	if (inNode->mIsGroup) Group_Dtor((Group*)inNode);
-	else Graph_Dtor((Graph*)inNode);
+	else {
+		/* CUSTOM GRAPH FREEING CODE FOR THE VIDEO SERVER */
+		video_free_node(inNode->mWorld, inNode->mID);
+		/* END ADDED CODE */
+
+		Graph_Dtor((Graph*)inNode);
+	}
 }
 
 // add a node after another one

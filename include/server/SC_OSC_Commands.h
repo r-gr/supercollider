@@ -111,5 +111,14 @@ enum {
 
 	cmd_version = 64,
 
-	NUMBER_OF_COMMANDS = 65
+	// video server only
+	cmd_gl_newWindow = 65,
+	cmd_gl_freeWindow = 66,
+	cmd_gl_v_new = 67,
+	cmd_gl_v_read = 68,
+	cmd_gl_v_free = 69,
+	cmd_gl_i_new = 70,
+	cmd_gl_i_free = 71,
+
+	NUMBER_OF_COMMANDS = 72 // 65 for non-video server
 };
