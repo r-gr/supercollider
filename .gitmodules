@@ -20,3 +20,6 @@
 [submodule "editors/sc-el"]
 	path = editors/sc-el
 	url = https://github.com/supercollider/scel/
+[submodule "server/scvid"]
+	path = server/scvid
+	url = https://github.com/r-gr/video-server.git

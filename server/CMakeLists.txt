@@ -47,3 +47,30 @@ endif()
 
 set(plugins "${plugins}" PARENT_SCOPE)
 set(supernova_plugins "${supernova_plugins}" PARENT_SCOPE)
+
+# Build scvid, the video server
+if (APPLE)
+	message(SEND_ERROR "Not building scvid because macOS is not currently supported.")
+elseif(WIN32)
+	message(SEND_ERROR "Not building scvid because Windows is not supported.")
+else()
+	if (NOT LINUX)
+		message(WARNING "Attempting to build scvid but this may fail because only Linux is supported.")
+	endif()
+
+	find_program(Stack_FOUND stack)
+	if(Stack_FOUND)
+		message(STATUS "Found Haskell Stack tool: ${Stack_FOUND}")
+		file(COPY scvid DESTINATION ${CMAKE_BINARY_DIR}/server)
+		execute_process(COMMAND stack setup WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/server/scvid OUTPUT_QUIET ERROR_QUIET)
+		add_custom_target(scvid ALL
+			stack build --no-cabal-verbose --copy-bins --local-bin-path ${CMAKE_BINARY_DIR}/server/scvid
+			COMMAND mv ${CMAKE_BINARY_DIR}/server/scvid/video-server-exe ${CMAKE_BINARY_DIR}/server/scvid/scvid
+			WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/server/scvid
+		)
+	else()
+		message(FATAL_ERROR "Haskell Stack tool not found, cannot compile scvid.")
+	endif()
+endif()
+
+# install(CODE "execute_process (COMMAND stack install --local-bin-path ${CMAKE_INSTALL_PREFIX}/bin WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/haskell-tool)")
