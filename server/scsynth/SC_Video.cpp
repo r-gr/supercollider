@@ -23,24 +23,23 @@
 	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 */
 
-#include <string.h>             // for strlen
-#include <bits/stdint-uintn.h>  // for uint32_t
-#include <bits/stdint-intn.h>   // for int32_t
-#include <string>               // for string
-#include <zmq.h>                // for zmq_send, zmq_strerror, ZMQ_DONTWAIT
+#include <string.h>           // for strlen
+#include <stdint.h>           // for int32_t, uint32_t
+#include <string>             // for string
+#include <zmq.h>              // for zmq_send, zmq_strerror, ZMQ_DONTWAIT
 
-#include "SC_Graph.h"           // for Graph
-#include "SC_Unit.h"            // for Unit
-#include "SC_UnitDef.h"         // for UnitDef
-#include "SC_Wire.h"            // for Wire
-#include "SC_World.h"           // for World
-#include "SC_WorldOptions.h"    // for scprintf
-#include "SC_Prototypes.h"      // for World_Alloc, World_Free
-#include "json.hpp"             // for json_ref, basic_json<>::value_type, json
-#include "SC_Node.h"            // for Node
-#include "SC_CoreAudio.h"       // for SC_AudioDriver
-#include "SC_HiddenWorld.h"     // for HiddenWorld
-#include "SC_FifoMsg.h"         // for FifoMsg
+#include "SC_Graph.h"         // for Graph
+#include "SC_Unit.h"          // for Unit
+#include "SC_UnitDef.h"       // for UnitDef
+#include "SC_Wire.h"          // for Wire
+#include "SC_World.h"         // for World
+#include "SC_WorldOptions.h"  // for scprintf
+#include "SC_Prototypes.h"    // for World_Alloc, World_Free
+#include "json.hpp"           // for json_ref, basic_json<>::value_type, json
+#include "SC_Node.h"          // for Node
+#include "SC_CoreAudio.h"     // for SC_AudioDriver
+#include "SC_HiddenWorld.h"   // for HiddenWorld
+#include "SC_FifoMsg.h"       // for FifoMsg
 
 using json = nlohmann::json;
 

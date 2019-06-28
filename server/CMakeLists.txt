@@ -49,6 +49,7 @@ set(plugins "${plugins}" PARENT_SCOPE)
 set(supernova_plugins "${supernova_plugins}" PARENT_SCOPE)
 
 # Build scvid, the video server
+option(STACK_USE_SYSTEM_GHC "Pass --system-ghc to the Haskell Stack tool" OFF)
 if (APPLE)
 	message(SEND_ERROR "Not building scvid because macOS is not currently supported.")
 elseif(WIN32)
@@ -59,15 +60,24 @@ else()
 	endif()
 
 	find_program(Stack_FOUND stack)
-	if(Stack_FOUND)
+	if (Stack_FOUND)
 		message(STATUS "Found Haskell Stack tool: ${Stack_FOUND}")
 		file(COPY scvid DESTINATION ${CMAKE_BINARY_DIR}/server)
-		execute_process(COMMAND stack setup WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/server/scvid OUTPUT_QUIET ERROR_QUIET)
-		add_custom_target(scvid ALL
-			stack build --no-cabal-verbose --copy-bins --local-bin-path ${CMAKE_BINARY_DIR}/server/scvid
-			COMMAND mv ${CMAKE_BINARY_DIR}/server/scvid/video-server-exe ${CMAKE_BINARY_DIR}/server/scvid/scvid
-			WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/server/scvid
-		)
+		if (STACK_USE_SYSTEM_GHC)
+			add_custom_target(scvid ALL
+				stack build --system-ghc --copy-bins --local-bin-path ${CMAKE_BINARY_DIR}/server/scvid
+				COMMAND mv ${CMAKE_BINARY_DIR}/server/scvid/video-server-exe ${CMAKE_BINARY_DIR}/server/scvid/scvid
+				WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/server/scvid
+			)
+		else()
+			message(STATUS "Haskell Stack may produce a lot of text output now...")
+			execute_process(COMMAND stack setup WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/server/scvid) # OUTPUT_QUIET ERROR_QUIET)
+			add_custom_target(scvid ALL
+				stack build --copy-bins --local-bin-path ${CMAKE_BINARY_DIR}/server/scvid
+				COMMAND mv ${CMAKE_BINARY_DIR}/server/scvid/video-server-exe ${CMAKE_BINARY_DIR}/server/scvid/scvid
+				WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/server/scvid
+			)
+		endif()
 	else()
 		message(FATAL_ERROR "Haskell Stack tool not found, cannot compile scvid.")
 	endif()

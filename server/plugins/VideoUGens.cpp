@@ -24,8 +24,7 @@
 */
 
 #include <stdio.h>              // for printf
-#include <bits/stdint-intn.h>   // for int32_t
-#include <stdint.h>             // for uint_fast8_t
+#include <stdint.h>             // for int32_t, uint_fast8_t
 #include <zmq.h>                // for zmq_send
 
 #include "SC_PlugIn.h"

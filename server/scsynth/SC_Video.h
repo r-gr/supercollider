@@ -1,6 +1,6 @@
-#include <bits/stdint-intn.h>  // for int32_t
+#include <stdint.h>    // for int32_t
 
-#include "SC_Graph.h"          // for Graph
+#include "SC_Graph.h"  // for Graph
 
 void process_graph(World *inWorld, Graph *graph);
 void video_free_node(World *inWorld, int32_t nodeID);
