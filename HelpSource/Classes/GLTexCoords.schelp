@@ -1,0 +1,30 @@
+class:: GLTexCoords
+summary:: the default texture coordinates (the full window).
+// related::
+categories:: UGens>Video>Texture
+
+
+Description::
+
+Gets the default texture coordinates which simply cover the output window.
+These coordinates can be transformed by texture coordinate transformation functions like link::Classes/GLTexMirrorX::.
+
+
+classmethods::
+
+method::fr
+
+
+Examples::
+
+code::
+
+// load a video on the server and play it
+(
+~vidID = 0;
+GLVideo.new(~vidID, "/path/to/video.mp4");
+
+{ GLShowVidTex.fr(~vidID, GLTexCoords.fr) }.play;
+)
+
+::

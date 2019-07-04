@@ -1,0 +1,56 @@
+class:: GLRGB
+summary:: modulate input video signal's RGBA channels.
+related:: Classes/GLRed, Classes/GLGreen, Classes/GLBlue, Classes/GLRGBA
+categories::  UGens>Video>PixelTransformations
+
+
+Description::
+
+Takes a video signal and multiplies the red, green, blue and alpha channels of each pixel by the given values.
+With the alpha value fixed at 1.0, this is the same as link::Classes/GLRGB::.
+
+
+classmethods::
+
+method::fr
+
+argument::in
+Input video signal at frame rate.
+
+argument::r
+Each pixel's red channel will be multiplied by this value.
+
+argument::g
+Each pixel's green channel will be multiplied by this value.
+
+argument::b
+Each pixel's blue channel will be multiplied by this value.
+
+argument::a
+Each pixel's alpha channel will be multiplied by this value.
+
+
+Examples::
+
+code::
+
+// set the RGBA channels of a white plane to (1, 0.65, 0, 0.5)
+// to get a muddy orange/brown colour
+{ GLRGBA.fr(GLWhite.fr, 1, 0.65, 0, 0.5) }.play;
+
+// modulate the RGBA channels of a white plane with sine wave
+// LFOs of slightly different frequencies to smoothly move
+// through a range of colours
+(
+{
+GLRGBA.fr(
+	GLWhite.fr,
+	r: SinOsc.kr(0.16).unipolar,
+	g: SinOsc.kr(0.20).unipolar,
+	b: SinOsc.kr(0.24).unipolar,
+	a: SinOsc.kr(0.12).range(0.5, 1.0)
+)
+}.play;
+)
+
+::

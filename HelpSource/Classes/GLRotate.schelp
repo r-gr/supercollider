@@ -1,0 +1,35 @@
+class:: GLRotate
+summary:: rotate texture coordinates.
+// related::
+categories:: UGens>Video>Texture
+
+
+Description::
+
+Rotates the input texture coordinates by the specified angle.
+
+
+classmethods::
+
+method::fr
+
+argument::coords
+The texture coordinates to rotate.
+
+argument::angle
+The angle the texture coordinates are rotated by.
+
+
+/*Examples::
+
+code::
+
+// load a video on the server and play it
+(
+~vidID = 0;
+GLVideo.new(~vidID, "/path/to/video.mp4");
+
+{ GLShowVidTex.fr(~vidID, GLTexCoords.fr) }.play;
+)
+
+::*/

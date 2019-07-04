@@ -1,0 +1,35 @@
+class:: GLAlpha
+summary:: modulate input video signal alpha channel.
+related:: Classes/GLOpacity, Classes/GLRGBA
+categories::  UGens>Video>PixelTransformations
+
+
+Description::
+
+Takes a video signal and multiplies the alpha channel of each pixel by the given value.
+It differs from link::Classes/GLOpacity:: in that link::Classes/GLOpacity:: sets rather than multiplies each pixel's alpha channel.
+
+
+classmethods::
+
+method::fr
+
+argument::in
+Input video signal at frame rate.
+
+argument::alpha
+Each pixel's alpha channel will be multiplied by this value.
+
+
+Examples::
+
+code::
+
+// set the alpha channel of a white plane to 0.5 to get a gray colour
+{ GLAlpha.fr(GLWhite.fr, 0.5) }.play;
+
+// modulate the alpha channel of a white plane with a 2Hz sine wave
+// LFO ranging between 0 and 1
+{ GLAlpha.fr(GLWhite.fr, SinOsc.kr(2).range(0, 1)) }.play;
+
+::

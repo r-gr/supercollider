@@ -1,0 +1,37 @@
+class:: GLOut
+summary:: output a video signal to a window.
+// related:: Classes/Out
+categories::  UGens>Video>InOut
+
+
+Description::
+
+Displays the input video signal in an output window.
+It requires an output window to be open after being created using code::GLWindow.new::.
+This is analagous to the link::Classes/Out:: UGen for audio.
+
+
+classmethods::
+
+method::fr
+
+argument::in
+Input video signal at frame rate.
+
+
+Examples::
+
+code::
+
+// create a window and a run a simple SynthDef which draws
+// a white plane to the window using GLOut.
+(
+GLWindow.new; // does nothing if a window is already open
+
+SynthDef(\GLOutTest, {
+	GLOut.fr(GLWhite.fr)
+}).play(s)
+)
+
+
+::

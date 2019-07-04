@@ -1,0 +1,32 @@
+class:: GLPlayVid
+summary:: plays a video loaded on the server.
+related:: Classes/GLPlayImg, Classes/GLShowImgTex, Classes/GLShowVidTex
+categories:: UGens>Video
+
+
+Description::
+
+Plays a video loaded on the server represented by a video ID.
+
+
+classmethods::
+
+method::fr
+
+argument::vidID
+The video with this ID is played.
+
+
+Examples::
+
+code::
+
+// load a video on the server and play it
+(
+~vidID = 0;
+GLVideo.new(~vidID, "/path/to/video.mp4");
+
+{ GLPlayVid.fr(~vidID) }.play;
+)
+
+::

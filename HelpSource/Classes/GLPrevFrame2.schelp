@@ -1,0 +1,33 @@
+class:: GLPrevFrame2
+summary:: draw the previous frame with specified texture coordinates.
+related:: Classes/GLPrevFrame
+categories:: UGens>Video>Feedback, UGens>Video>Generators, UGens>Video>Texture
+
+
+Description::
+
+Similar to link::Classes/GLPrevFrame:: except it displays the contents of the previous frame using specified texture coordinates.
+This allows spatial transformations of the previous frame's content for more flexibility in feedback effects.
+
+
+classmethods::
+
+method::fr
+
+argument::coords
+The texture coordinates to use for drawing the previous frame.
+
+
+// Examples::
+//
+// code::
+//
+// // load an image on the server and display it
+// (
+// ~vidID = 0;
+// GLImage.new(~vidID, "/path/to/video.mp4");
+//
+// { GLPlayImg.fr(~vidID) }.play;
+// )
+//
+// ::

@@ -1,0 +1,52 @@
+class:: GLMix
+summary:: mix two input video signals.
+related:: Classes/GLBlend
+categories::  UGens>Video>PixelTransformations
+
+
+Description::
+
+Takes two video signals and linearly interpolates between their pixels' RGBA values.
+
+
+classmethods::
+
+method::fr
+
+argument::in1
+First input video signal at frame rate.
+
+argument::in2
+Second input video signal at frame rate.
+
+argument::mix
+The pixel RGBA values of each input video signal will be mixed, weighted by this value.
+
+
+Examples::
+
+code::
+
+// equal mix between red and blue to get a purple colour
+(
+{
+GLMix.fr(
+	GLRGB.fr(GLWhite.fr, 1.0, 0.0, 0.0), // red
+	GLRGB.fr(GLWhite.fr, 0.0, 0.0, 1.0), // blue
+	0.5
+)
+}.play;
+)
+
+// use a triangle wave LFO to smoothly mix between red and blue
+(
+{
+GLMix.fr(
+	GLRGB.fr(GLWhite.fr, 1.0, 0.0, 0.0), // red
+	GLRGB.fr(GLWhite.fr, 0.0, 0.0, 1.0), // blue
+	LFTri.kr(0.5).unipolar
+)
+}.play;
+)
+
+::

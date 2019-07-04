@@ -1,0 +1,34 @@
+class:: GLGreen
+summary:: modulate input video signal's green (RGB) channel.
+related:: Classes/GLRed, Classes/GLBlue, Classes/GLRGB, Classes/GLRGBA
+categories::  UGens>Video>PixelTransformations
+
+
+Description::
+
+Takes a video signal and multiplies the green channel of each pixel by the given value.
+
+
+classmethods::
+
+method::fr
+
+argument::in
+Input video signal at frame rate.
+
+argument::green
+Each pixel's green channel will be multiplied by this value.
+
+
+Examples::
+
+code::
+
+// set the green channel of a white plane to 0.2 to get a pink colour
+{ GLGreen.fr(GLWhite.fr, 0.2) }.play;
+
+// modulate the green channel of a white plane with a 2Hz sine wave
+// LFO ranging between 0 and 1
+{ GLGreen.fr(GLWhite.fr, SinOsc.kr(2).range(0, 1)) }.play;
+
+::

@@ -1,0 +1,32 @@
+class:: GLTexFlipY
+summary:: flip texture coordinates in the y-axis.
+related:: Classes/GLTexFlipX
+categories:: UGens>Video>Texture
+
+
+Description::
+
+Flips some texture coordinates in the y-axis.
+
+
+classmethods::
+
+method::fr
+
+argument::coords
+The texture coordinates to flip in the y-axis.
+
+
+/*Examples::
+
+code::
+
+// load a video on the server and play it
+(
+~vidID = 0;
+GLVideo.new(~vidID, "/path/to/video.mp4");
+
+{ GLShowVidTex.fr(~vidID, GLTexCoords.fr) }.play;
+)
+
+::*/

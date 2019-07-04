@@ -1,0 +1,34 @@
+class:: GLRed
+summary:: modulate input video signal's red (RGB) channel.
+related:: Classes/GLGreen, Classes/GLBlue, Classes/GLRGB, Classes/GLRGBA
+categories::  UGens>Video>PixelTransformations
+
+
+Description::
+
+Takes a video signal and multiplies the red channel of each pixel by the given value.
+
+
+classmethods::
+
+method::fr
+
+argument::in
+Input video signal at frame rate.
+
+argument::red
+Each pixel's red channel will be multiplied by this value.
+
+
+Examples::
+
+code::
+
+// set the red channel of a white plane to 0.2 to get a turquoise colour
+{ GLRed.fr(GLWhite.fr, 0.2) }.play;
+
+// modulate the red channel of a white plane with a 2Hz sine wave
+// LFO ranging between 0 and 1
+{ GLRed.fr(GLWhite.fr, SinOsc.kr(2).range(0, 1)) }.play;
+
+::

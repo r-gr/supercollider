@@ -1,0 +1,24 @@
+class:: GLWhite
+summary:: draw a white plane.
+// related::
+categories::  UGens>Video>Generators
+
+
+Description::
+
+Draws a white plane by setting every pixel value to opaque white.
+
+
+classmethods::
+
+method::fr
+
+
+Examples::
+
+code::
+
+// draw a white plane
+{ GLWhite.fr }.play;
+
+::

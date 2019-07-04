@@ -1,0 +1,35 @@
+class:: GLShowVidTex
+summary:: display an image loaded on the server with specified texture coordinates.
+related:: Classes/GLPlayImg, Classes/GLPlayVid, Classes/GLShowImgTex
+categories:: UGens>Video, UGens>Video>Texture
+
+
+Description::
+
+Plays a video loaded on the server (represented by a video ID) with specified texture coordinates.
+
+
+classmethods::
+
+method::fr
+
+argument::vidID
+The video with this ID is played.
+
+argument::coords
+The texture coordinates used to display the video.
+
+
+Examples::
+
+code::
+
+// load a video on the server and play it upside down
+(
+~vidID = 0;
+GLVideo.new(~vidID, "/path/to/video.mp4");
+
+{ GLShowVidTex.fr(~vidID, GLTexFlipY.fr(GLTexCoords.fr)) }.play;
+)
+
+::

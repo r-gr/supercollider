@@ -1,0 +1,74 @@
+class:: GLBlend
+summary:: mix two input video signals with variable blending mode.
+related:: Classes/GLMix
+categories::  UGens>Video>PixelTransformations
+
+
+Description::
+
+Takes two video signals and linearly interpolates between their pixels' RGBA values.
+The code::blendMode:: can be one of the following integer values, defaulting to a link::Classes/GLMix:: style blending if none of those values.
+
+LIST::
+## 0 – normal
+## 1 – multiply
+## 2 – screen
+## 3 – darken
+## 4 – lighten
+## 5 – colour dodge
+## 6 – colour burn
+## 7 – hard light
+## 8 – overlay
+## 9 – difference
+## 10 – exclusion
+## default – link::Classes/GLMix:: style blending
+::
+
+
+classmethods::
+
+method::fr
+
+argument::backdrop
+First input video signal at frame rate.
+
+argument::source
+Second input video signal at frame rate.
+
+argument::blendMode
+The blending mode used to mix the pixel values, converted to an integer by taking the floor of this value.
+
+argument::mixVal
+The pixel RGBA values of each input video signal will be mixed, weighted by this value.
+
+
+Examples::
+
+code::
+
+// cycle through the different blending modes between red and blue
+(
+{
+GLBlend.fr(
+	GLRGB.fr(GLWhite.fr, 1.0, 0.0, 0.0), // red
+	GLRGB.fr(GLWhite.fr, 0.0, 0.0, 1.0), // blue
+	LFSaw.kr(0.1).range(0, 11),
+	0.5
+)
+}.play;
+)
+
+// use noise to randomly select the blending mode and mix value
+// between red and blue every second
+(
+{
+GLBlend.fr(
+	GLRGB.fr(GLWhite.fr, 1.0, 0.0, 0.0), // red
+	GLRGB.fr(GLWhite.fr, 0.0, 0.0, 1.0), // blue
+	LFNoise0.kr(1).range(0, 11),
+	LFNoise1.kr(1).unipolar
+)
+}.play;
+)
+
+::

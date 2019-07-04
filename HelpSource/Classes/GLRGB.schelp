@@ -1,0 +1,51 @@
+class:: GLRGB
+summary:: modulate input video signal's RGB channels.
+related:: Classes/GLRed, Classes/GLGreen, Classes/GLBlue, Classes/GLRGBA
+categories::  UGens>Video>PixelTransformations
+
+
+Description::
+
+Takes a video signal and multiplies the red, green and blue channels of each pixel by the given values.
+
+
+classmethods::
+
+method::fr
+
+argument::in
+Input video signal at frame rate.
+
+argument::r
+Each pixel's red channel will be multiplied by this value.
+
+argument::g
+Each pixel's green channel will be multiplied by this value.
+
+argument::b
+Each pixel's blue channel will be multiplied by this value.
+
+
+Examples::
+
+code::
+
+// set the RGB channels of a white plane to (1, 0.65, 0)
+// to get an orange colour
+{ GLRGB.fr(GLWhite.fr, 1, 0.65, 0) }.play;
+
+// modulate the RGBA channels of a white plane with sine wave
+// LFOs of slightly different frequencies to smoothly move
+// through a range of colours
+(
+{
+GLRGB.fr(
+	GLWhite.fr,
+	r: SinOsc.kr(0.16).unipolar,
+	g: SinOsc.kr(0.20).unipolar,
+	b: SinOsc.kr(0.24).unipolar
+)
+}.play;
+)
+
+::

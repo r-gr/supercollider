@@ -1,0 +1,35 @@
+class:: GLShowImgTex
+summary:: display an image loaded on the server with specified texture coordinates.
+related:: Classes/GLPlayImg, Classes/GLPlayVid, Classes/GLShowVidTex
+categories:: UGens>Video, UGens>Video>Texture
+
+
+Description::
+
+Displays an image loaded on the server (represented by an image ID) with specified texture coordinates.
+
+
+classmethods::
+
+method::fr
+
+argument::imgID
+The image with this ID is displayed.
+
+argument::coords
+The texture coordinates used to display the image.
+
+
+Examples::
+
+code::
+
+// load an image on the server and display it upside down
+(
+~imgID = 0;
+GLImage.new(~imgID, "/path/to/image.jpg");
+
+{ GLShowImgTex.fr(~imgID, GLTexFlipY.fr(GLTexCoords.fr)) }.play;
+)
+
+::

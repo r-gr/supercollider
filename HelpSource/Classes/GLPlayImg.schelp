@@ -1,0 +1,32 @@
+class:: GLPlayImg
+summary:: display an image loaded on the server.
+related:: Classes/GLPlayVid, Classes/GLShowImgTex, Classes/GLShowVidTex
+categories:: UGens>Video
+
+
+Description::
+
+Displays an image loaded on the server represented by an image ID.
+
+
+classmethods::
+
+method::fr
+
+argument::imgID
+The image with this ID is displayed.
+
+
+Examples::
+
+code::
+
+// load an image on the server and display it
+(
+~imgID = 0;
+GLImage.new(~imgID, "/path/to/image.jpg");
+
+{ GLPlayImg.fr(~imgID) }.play;
+)
+
+::

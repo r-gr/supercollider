@@ -1,0 +1,30 @@
+class:: GLPrevFrame
+summary:: the contents of the previous drawn frame.
+related:: Classes/GLPrevFrame2
+categories:: UGens>Video>Feedback, UGens>Video>Generators
+
+
+Description::
+
+Displays the contents of the previous frame, allowing video feedback.
+This acts like a delay line of one frame in length.
+
+
+classmethods::
+
+method::fr
+
+
+// Examples::
+//
+// code::
+//
+// // load an image on the server and display it
+// (
+// ~vidID = 0;
+// GLImage.new(~vidID, "/path/to/video.mp4");
+//
+// { GLPlayImg.fr(~vidID) }.play;
+// )
+//
+// ::
