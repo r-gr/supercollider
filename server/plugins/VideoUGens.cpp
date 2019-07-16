@@ -190,6 +190,11 @@ struct GLRotate : public VideoUnit
 	DataMsg  *msgAngle;
 };
 
+struct Rotate : public VideoUnit
+{
+	DataMsg *msgAngle;
+};
+
 //////////////////////////////////////////////////////////////////////////////////
 
 struct SHKCheckerboard : public VideoUnit
@@ -366,6 +371,10 @@ void GLTexTrans_Dtor(GLTexTrans *unit);
 void GLRotate_Ctor(GLRotate *unit);
 void GLRotate_next_k(GLRotate *unit, int inNumSamples);
 void GLRotate_Dtor(GLRotate *unit);
+
+void Rotate_Ctor(Rotate *unit);
+void Rotate_next_k(Rotate *unit, int inNumSamples);
+void Rotate_Dtor(Rotate *unit);
 
 
 void SHKCheckerboard_Ctor(SHKCheckerboard *unit);
@@ -1228,6 +1237,39 @@ void GLRotate_next_k(GLRotate *unit, int inNumSamples)
 }
 
 void GLRotate_Dtor(GLRotate *unit)
+{
+	RTFree(unit->mWorld, unit->msgAngle);
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+
+void Rotate_Ctor(Rotate *unit)
+{
+	SETCALC(Rotate_next_k);
+	unit->rateDivideCounter = 0;
+
+	unit->msgAngle = (DataMsg *)RTAlloc(unit->mWorld, sizeof(DataMsg));
+	unit->msgAngle->msgType = 0;
+	Rotate_next_k(unit, 1);
+}
+
+void Rotate_next_k(Rotate *unit, int inNumSamples)
+{
+
+	if (SHOULD_SEND) {
+		// prepare messages to send to the video server
+		unit->msgAngle->nodeID = unit->mParent->mNode.mID;
+		unit->msgAngle->unitID = unit->mUnitIndex;
+		unit->msgAngle->index  = 1;
+		unit->msgAngle->value  = ZIN0(1);
+
+		zmq_send(unit->mWorld->mDataMsgSock, unit->msgAngle, sizeof(DataMsg), 0);
+	}
+
+	ZOUT0(0) = 0.f; // always output zero
+}
+
+void Rotate_Dtor(Rotate *unit)
 {
 	RTFree(unit->mWorld, unit->msgAngle);
 }
@@ -2280,6 +2322,7 @@ PluginLoad(Video)
 	DefineDtorUnit(GLTexScale);
 	DefineDtorUnit(GLTexTrans);
 	DefineDtorUnit(GLRotate);
+	DefineDtorUnit(Rotate);
 
 	DefineDtorUnit(SHKCheckerboard);
 	DefineDtorUnit(SHKCircleWave);
