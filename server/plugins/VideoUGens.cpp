@@ -74,27 +74,27 @@ struct VideoUnit : public Unit
 
 struct GLRed : public VideoUnit
 {
-	DataMsg  *msgRed;
+	DataMsg *msgRed;
 };
 
 struct GLGreen : public VideoUnit
 {
-	DataMsg  *msgGreen;
+	DataMsg *msgGreen;
 };
 
 struct GLBlue : public VideoUnit
 {
-	DataMsg  *msgBlue;
+	DataMsg *msgBlue;
 };
 
 struct GLAlpha : public VideoUnit
 {
-	DataMsg  *msgAlpha;
+	DataMsg *msgAlpha;
 };
 
 struct GLOpacity : public VideoUnit
 {
-	DataMsg  *msgOpacity;
+	DataMsg *msgOpacity;
 };
 
 struct GLWhite : public VideoUnit
@@ -125,17 +125,17 @@ struct GLPrevFrame2 : public VideoUnit
 
 struct GLRGB : public VideoUnit
 {
-	DataMsg  *msgR, *msgG, *msgB;
+	DataMsg *msgR, *msgG, *msgB;
 };
 
 struct GLRGBA : public VideoUnit
 {
-	DataMsg  *msgR, *msgG, *msgB, *msgA;
+	DataMsg *msgR, *msgG, *msgB, *msgA;
 };
 
 struct GLMix : public VideoUnit
 {
-	DataMsg  *msgMix;
+	DataMsg *msgMix;
 };
 
 struct GLBlend : public VideoUnit
@@ -143,56 +143,49 @@ struct GLBlend : public VideoUnit
 	DataMsg *msgBlendMode, *msgMix;
 };
 
-struct GLShowImgTex : public VideoUnit
-{
-	ImageMsg *msgImgID;
-};
+//////////////////////////////////////////////////////////////////////////////////
 
-struct GLShowVidTex : public VideoUnit
-{
-	VideoMsg *msgVidID;
-};
-
-struct GLTexCoords : public VideoUnit
+struct FlipX : public VideoUnit
 {
 };
 
-struct GLTexFlipX : public VideoUnit
+struct FlipY : public VideoUnit
 {
 };
 
-struct GLTexFlipY : public VideoUnit
+struct MirrorX : public VideoUnit
 {
+	DataMsg *msgMirrorX, *msgPolarity;
 };
 
-struct GLTexMirrorX : public VideoUnit
+struct MirrorY : public VideoUnit
 {
-	DataMsg  *msgMirrorX, *msgPolarity;
+	DataMsg *msgMirrorY, *msgPolarity;
 };
 
-struct GLTexMirrorY : public VideoUnit
+struct Ripple : public VideoUnit
 {
-	DataMsg  *msgMirrorY, *msgPolarity;
-};
-
-struct GLTexScale : public VideoUnit
-{
-	DataMsg  *msgScaleX, *msgScaleY;
-};
-
-struct GLTexTrans : public VideoUnit
-{
-	DataMsg  *msgTransX, *msgTransY;
-};
-
-struct GLRotate : public VideoUnit
-{
-	DataMsg  *msgAngle;
+	DataMsg *msgTime, *msgSpeed, *msgStrength, *msgFreq;
 };
 
 struct Rotate : public VideoUnit
 {
 	DataMsg *msgAngle;
+};
+
+struct Scale2 : public VideoUnit
+{
+	DataMsg *msgScale;
+};
+
+struct ScaleXY : public VideoUnit
+{
+	DataMsg *msgScaleX, *msgScaleY;
+};
+
+struct Translate : public VideoUnit
+{
+	DataMsg *msgTranslateX, *msgTranslateY;
 };
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -216,62 +209,56 @@ struct SHKDesaturate : public VideoUnit
 	DataMsg *msgStrength;
 };
 
-struct SHKWater : public VideoUnit
-{
-	VideoMsg *msgVidID;
-	DataMsg  *msgTime, *msgSpeed, *msgStrength, *msgFreq;
-};
-
 //////////////////////////////////////////////////////////////////////////////////
 
 struct GLFunc1 : public VideoUnit
 {
-	DataMsg  *msg1;
+	DataMsg *msg1;
 };
 
 struct GLFunc2 : public VideoUnit
 {
-	DataMsg  *msg1, *msg2;
+	DataMsg *msg1, *msg2;
 };
 
 struct GLFunc3 : public VideoUnit
 {
-	DataMsg  *msg1, *msg2, *msg3;
+	DataMsg *msg1, *msg2, *msg3;
 };
 
 struct GLFunc4 : public VideoUnit
 {
-	DataMsg  *msg1, *msg2, *msg3, *msg4;
+	DataMsg *msg1, *msg2, *msg3, *msg4;
 };
 
 struct GLFunc5 : public VideoUnit
 {
-	DataMsg  *msg1, *msg2, *msg3, *msg4, *msg5;
+	DataMsg *msg1, *msg2, *msg3, *msg4, *msg5;
 };
 
 struct GLFunc6 : public VideoUnit
 {
-	DataMsg  *msg1, *msg2, *msg3, *msg4, *msg5, *msg6;
+	DataMsg *msg1, *msg2, *msg3, *msg4, *msg5, *msg6;
 };
 
 struct GLFunc7 : public VideoUnit
 {
-	DataMsg  *msg1, *msg2, *msg3, *msg4, *msg5, *msg6, *msg7;
+	DataMsg *msg1, *msg2, *msg3, *msg4, *msg5, *msg6, *msg7;
 };
 
 struct GLFunc8 : public VideoUnit
 {
-	DataMsg  *msg1, *msg2, *msg3, *msg4, *msg5, *msg6, *msg7, *msg8;
+	DataMsg *msg1, *msg2, *msg3, *msg4, *msg5, *msg6, *msg7, *msg8;
 };
 
 struct GLFunc9 : public VideoUnit
 {
-	DataMsg  *msg1, *msg2, *msg3, *msg4, *msg5, *msg6, *msg7, *msg8, *msg9;
+	DataMsg *msg1, *msg2, *msg3, *msg4, *msg5, *msg6, *msg7, *msg8, *msg9;
 };
 
 struct GLFunc10 : public VideoUnit
 {
-	DataMsg  *msg1, *msg2, *msg3, *msg4, *msg5, *msg6, *msg7, *msg8, *msg9, *msg10;
+	DataMsg *msg1, *msg2, *msg3, *msg4, *msg5, *msg6, *msg7, *msg8, *msg9, *msg10;
 };
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -335,46 +322,40 @@ void GLBlend_Ctor(GLBlend *unit);
 void GLBlend_next_k(GLBlend *unit, int inNumSamples);
 void GLBlend_Dtor(GLBlend *unit);
 
-void GLShowImgTex_Ctor(GLShowImgTex *unit);
-void GLShowImgTex_next_k(GLShowImgTex *unit, int inNumSamples);
-void GLShowImgTex_Dtor(GLShowImgTex *unit);
 
-void GLShowVidTex_Ctor(GLShowVidTex *unit);
-void GLShowVidTex_next_k(GLShowVidTex *unit, int inNumSamples);
-void GLShowVidTex_Dtor(GLShowVidTex *unit);
+void FlipX_Ctor(FlipX *unit);
+void FlipX_next_k(FlipX *unit, int inNumSamples);
 
-void GLTexCoords_Ctor(GLTexCoords *unit);
-void GLTexCoords_next_k(GLTexCoords *unit, int inNumSamples);
+void FlipY_Ctor(FlipY *unit);
+void FlipY_next_k(FlipY *unit, int inNumSamples);
 
-void GLTexFlipX_Ctor(GLTexFlipX *unit);
-void GLTexFlipX_next_k(GLTexFlipX *unit, int inNumSamples);
+void MirrorX_Ctor(MirrorX *unit);
+void MirrorX_next_k(MirrorX *unit, int inNumSamples);
+void MirrorX_Dtor(MirrorX *unit);
 
-void GLTexFlipY_Ctor(GLTexFlipY *unit);
-void GLTexFlipY_next_k(GLTexFlipY *unit, int inNumSamples);
+void MirrorY_Ctor(MirrorY *unit);
+void MirrorY_next_k(MirrorY *unit, int inNumSamples);
+void MirrorY_Dtor(MirrorY *unit);
 
-void GLTexMirrorX_Ctor(GLTexMirrorX *unit);
-void GLTexMirrorX_next_k(GLTexMirrorX *unit, int inNumSamples);
-void GLTexMirrorX_Dtor(GLTexMirrorX *unit);
-
-void GLTexMirrorY_Ctor(GLTexMirrorY *unit);
-void GLTexMirrorY_next_k(GLTexMirrorY *unit, int inNumSamples);
-void GLTexMirrorY_Dtor(GLTexMirrorY *unit);
-
-void GLTexScale_Ctor(GLTexScale *unit);
-void GLTexScale_next_k(GLTexScale *unit, int inNumSamples);
-void GLTexScale_Dtor(GLTexScale *unit);
-
-void GLTexTrans_Ctor(GLTexTrans *unit);
-void GLTexTrans_next_k(GLTexTrans *unit, int inNumSamples);
-void GLTexTrans_Dtor(GLTexTrans *unit);
-
-void GLRotate_Ctor(GLRotate *unit);
-void GLRotate_next_k(GLRotate *unit, int inNumSamples);
-void GLRotate_Dtor(GLRotate *unit);
+void Ripple_Ctor(Ripple *unit);
+void Ripple_next_k(Ripple *unit, int inNumSamples);
+void Ripple_Dtor(Ripple *unit);
 
 void Rotate_Ctor(Rotate *unit);
 void Rotate_next_k(Rotate *unit, int inNumSamples);
 void Rotate_Dtor(Rotate *unit);
+
+void Scale2_Ctor(Scale2 *unit);
+void Scale2_next_k(Scale2 *unit, int inNumSamples);
+void Scale2_Dtor(Scale2 *unit);
+
+void ScaleXY_Ctor(ScaleXY *unit);
+void ScaleXY_next_k(ScaleXY *unit, int inNumSamples);
+void ScaleXY_Dtor(ScaleXY *unit);
+
+void Translate_Ctor(Translate *unit);
+void Translate_next_k(Translate *unit, int inNumSamples);
+void Translate_Dtor(Translate *unit);
 
 
 void SHKCheckerboard_Ctor(SHKCheckerboard *unit);
@@ -391,11 +372,6 @@ void SHKColorInvert_next_k(SHKColorInvert *unit, int inNumSamples);
 void SHKDesaturate_Ctor(SHKDesaturate *unit);
 void SHKDesaturate_next_k(SHKDesaturate *unit, int inNumSamples);
 void SHKDesaturate_Dtor(SHKDesaturate *unit);
-
-void SHKWater_Ctor(SHKWater *unit);
-void SHKWater_next_k(SHKWater *unit, int inNumSamples);
-void SHKWater_Dtor(SHKWater *unit);
-
 
 
 void GLFunc1_Ctor(GLFunc1 *unit);
@@ -927,130 +903,45 @@ void GLBlend_Dtor(GLBlend *unit)
 
 //////////////////////////////////////////////////////////////////////////////////
 
-void GLShowImgTex_Ctor(GLShowImgTex *unit)
+void FlipX_Ctor(FlipX *unit)
 {
-	SETCALC(GLShowImgTex_next_k);
-	unit->rateDivideCounter = 0;
-
-	unit->msgImgID = (ImageMsg *)RTAlloc(unit->mWorld, sizeof(ImageMsg));
-	unit->msgImgID->msgType = 2;
-	GLShowImgTex_next_k(unit, 1);
+	SETCALC(FlipX_next_k);
+	FlipX_next_k(unit, 1);
 }
 
-void GLShowImgTex_next_k(GLShowImgTex *unit, int inNumSamples)
-{
-	if (SHOULD_SEND) {
-		// int32_t inImgID = (int32_t) DEMANDINPUT(0);
-		int32_t inImgID = (int32_t) ZIN0(0);
-
-		// prepare messages to send to the video server
-		unit->msgImgID->nodeID  = unit->mParent->mNode.mID;
-		unit->msgImgID->unitID  = unit->mUnitIndex;
-		unit->msgImgID->index   = 0;
-		unit->msgImgID->imageID = inImgID;
-
-		// send values to video server via nanomsg
-		zmq_send(unit->mWorld->mDataMsgSock, unit->msgImgID, sizeof(ImageMsg), 0);
-	}
-
-	ZOUT0(0) = 0.f; // always output zero
-}
-
-void GLShowImgTex_Dtor(GLShowImgTex *unit)
-{
-	RTFree(unit->mWorld, unit->msgImgID);
-}
-
-//////////////////////////////////////////////////////////////////////////////////
-
-void GLShowVidTex_Ctor(GLShowVidTex *unit)
-{
-	SETCALC(GLShowVidTex_next_k);
-	unit->rateDivideCounter = 0;
-
-	unit->msgVidID = (VideoMsg *)RTAlloc(unit->mWorld, sizeof(VideoMsg));
-	unit->msgVidID->msgType = 1;
-	GLShowVidTex_next_k(unit, 1);
-}
-
-void GLShowVidTex_next_k(GLShowVidTex *unit, int inNumSamples)
-{
-	if (SHOULD_SEND) {
-		// int32_t inVidID = (int32_t) DEMANDINPUT(0);
-		int32_t inVidID = (int32_t) ZIN0(0);
-
-		// prepare messages to send to the video server
-		unit->msgVidID->nodeID  = unit->mParent->mNode.mID;
-		unit->msgVidID->unitID  = unit->mUnitIndex;
-		unit->msgVidID->index   = 0;
-		unit->msgVidID->videoID = inVidID;
-
-		// send values to video server via nanomsg
-		zmq_send(unit->mWorld->mDataMsgSock, unit->msgVidID, sizeof(VideoMsg), 0);
-	}
-
-	ZOUT0(0) = 0.f; // always output zero
-}
-
-void GLShowVidTex_Dtor(GLShowVidTex *unit)
-{
-	RTFree(unit->mWorld, unit->msgVidID);
-}
-
-//////////////////////////////////////////////////////////////////////////////////
-
-void GLTexCoords_Ctor(GLTexCoords *unit)
-{
-	SETCALC(GLTexCoords_next_k);
-	GLTexCoords_next_k(unit, 1);
-}
-
-void GLTexCoords_next_k(GLTexCoords *unit, int inNumSamples)
+void FlipX_next_k(FlipX *unit, int inNumSamples)
 {
 	ZOUT0(0) = 0.f; // always output zero
 }
 
 //////////////////////////////////////////////////////////////////////////////////
 
-void GLTexFlipX_Ctor(GLTexFlipX *unit)
+void FlipY_Ctor(FlipY *unit)
 {
-	SETCALC(GLTexFlipX_next_k);
-	GLTexFlipX_next_k(unit, 1);
+	SETCALC(FlipY_next_k);
+	FlipY_next_k(unit, 1);
 }
 
-void GLTexFlipX_next_k(GLTexFlipX *unit, int inNumSamples)
+void FlipY_next_k(FlipY *unit, int inNumSamples)
 {
 	ZOUT0(0) = 0.f; // always output zero
 }
 
 //////////////////////////////////////////////////////////////////////////////////
 
-void GLTexFlipY_Ctor(GLTexFlipY *unit)
+void MirrorX_Ctor(MirrorX *unit)
 {
-	SETCALC(GLTexFlipY_next_k);
-	GLTexFlipY_next_k(unit, 1);
-}
-
-void GLTexFlipY_next_k(GLTexFlipY *unit, int inNumSamples)
-{
-	ZOUT0(0) = 0.f; // always output zero
-}
-
-//////////////////////////////////////////////////////////////////////////////////
-
-void GLTexMirrorX_Ctor(GLTexMirrorX *unit)
-{
-	SETCALC(GLTexMirrorX_next_k);
+	SETCALC(MirrorX_next_k);
 	unit->rateDivideCounter = 0;
 
 	unit->msgMirrorX = (DataMsg *)RTAlloc(unit->mWorld, sizeof(DataMsg));
 	unit->msgMirrorX->msgType = 0;
 	unit->msgPolarity = (DataMsg *)RTAlloc(unit->mWorld, sizeof(DataMsg));
 	unit->msgPolarity->msgType = 0;
-	GLTexMirrorX_next_k(unit, 1);
+	MirrorX_next_k(unit, 1);
 }
 
-void GLTexMirrorX_next_k(GLTexMirrorX *unit, int inNumSamples)
+void MirrorX_next_k(MirrorX *unit, int inNumSamples)
 {
 
 	if (SHOULD_SEND) {
@@ -1073,7 +964,7 @@ void GLTexMirrorX_next_k(GLTexMirrorX *unit, int inNumSamples)
 	ZOUT0(0) = 0.f; // always output zero
 }
 
-void GLTexMirrorX_Dtor(GLTexMirrorX *unit)
+void MirrorX_Dtor(MirrorX *unit)
 {
 	RTFree(unit->mWorld, unit->msgMirrorX);
 	RTFree(unit->mWorld, unit->msgPolarity);
@@ -1081,19 +972,19 @@ void GLTexMirrorX_Dtor(GLTexMirrorX *unit)
 
 //////////////////////////////////////////////////////////////////////////////////
 
-void GLTexMirrorY_Ctor(GLTexMirrorY *unit)
+void MirrorY_Ctor(MirrorY *unit)
 {
-	SETCALC(GLTexMirrorY_next_k);
+	SETCALC(MirrorY_next_k);
 	unit->rateDivideCounter = 0;
 
 	unit->msgMirrorY = (DataMsg *)RTAlloc(unit->mWorld, sizeof(DataMsg));
 	unit->msgMirrorY->msgType = 0;
 	unit->msgPolarity = (DataMsg *)RTAlloc(unit->mWorld, sizeof(DataMsg));
 	unit->msgPolarity->msgType = 0;
-	GLTexMirrorY_next_k(unit, 1);
+	MirrorY_next_k(unit, 1);
 }
 
-void GLTexMirrorY_next_k(GLTexMirrorY *unit, int inNumSamples)
+void MirrorY_next_k(MirrorY *unit, int inNumSamples)
 {
 
 	if (SHOULD_SEND) {
@@ -1116,7 +1007,7 @@ void GLTexMirrorY_next_k(GLTexMirrorY *unit, int inNumSamples)
 	ZOUT0(0) = 0.f; // always output zero
 }
 
-void GLTexMirrorY_Dtor(GLTexMirrorY *unit)
+void MirrorY_Dtor(MirrorY *unit)
 {
 	RTFree(unit->mWorld, unit->msgMirrorY);
 	RTFree(unit->mWorld, unit->msgPolarity);
@@ -1124,121 +1015,64 @@ void GLTexMirrorY_Dtor(GLTexMirrorY *unit)
 
 //////////////////////////////////////////////////////////////////////////////////
 
-void GLTexScale_Ctor(GLTexScale *unit)
+void Ripple_Ctor(Ripple *unit)
 {
-	SETCALC(GLTexScale_next_k);
+	SETCALC(Ripple_next_k);
 	unit->rateDivideCounter = 0;
 
-	unit->msgScaleX = (DataMsg *)RTAlloc(unit->mWorld, sizeof(DataMsg));
-	unit->msgScaleX->msgType = 0;
-	unit->msgScaleY = (DataMsg *)RTAlloc(unit->mWorld, sizeof(DataMsg));
-	unit->msgScaleY->msgType = 0;
-	GLTexScale_next_k(unit, 1);
+	unit->msgTime = (DataMsg *)RTAlloc(unit->mWorld, sizeof(DataMsg));
+	unit->msgTime->msgType = 0;
+	unit->msgSpeed = (DataMsg *)RTAlloc(unit->mWorld, sizeof(DataMsg));
+	unit->msgSpeed->msgType = 0;
+	unit->msgStrength = (DataMsg *)RTAlloc(unit->mWorld, sizeof(DataMsg));
+	unit->msgStrength->msgType = 0;
+	unit->msgFreq = (DataMsg *)RTAlloc(unit->mWorld, sizeof(DataMsg));
+	unit->msgFreq->msgType = 0;
+
+	Ripple_next_k(unit, 1);
 }
 
-void GLTexScale_next_k(GLTexScale *unit, int inNumSamples)
+void Ripple_next_k(Ripple *unit, int inNumSamples)
 {
-
 	if (SHOULD_SEND) {
+		float inTime = ZIN0(1);
+		float inSpeed = ZIN0(2);
+		float inStrength = ZIN0(3);
+		float inFreq = ZIN0(4);
+
 		// prepare messages to send to the video server
-		unit->msgScaleX->nodeID = unit->mParent->mNode.mID;
-		unit->msgScaleX->unitID = unit->mUnitIndex;
-		unit->msgScaleX->index  = 1;
-		unit->msgScaleX->value  = ZIN0(1);
+		unit->msgTime->nodeID = unit->mParent->mNode.mID;
+		unit->msgTime->unitID = unit->mUnitIndex;
+		unit->msgTime->index  = 1;
+		unit->msgTime->value  = inTime;
+		unit->msgSpeed->nodeID = unit->mParent->mNode.mID;
+		unit->msgSpeed->unitID = unit->mUnitIndex;
+		unit->msgSpeed->index  = 2;
+		unit->msgSpeed->value  = inTime;
+		unit->msgStrength->nodeID = unit->mParent->mNode.mID;
+		unit->msgStrength->unitID = unit->mUnitIndex;
+		unit->msgStrength->index  = 3;
+		unit->msgStrength->value  = inTime;
+		unit->msgFreq->nodeID = unit->mParent->mNode.mID;
+		unit->msgFreq->unitID = unit->mUnitIndex;
+		unit->msgFreq->index  = 4;
+		unit->msgFreq->value  = inTime;
 
-		zmq_send(unit->mWorld->mDataMsgSock, unit->msgScaleX, sizeof(DataMsg), 0);
-
-		unit->msgScaleY->nodeID = unit->mParent->mNode.mID;
-		unit->msgScaleY->unitID = unit->mUnitIndex;
-		unit->msgScaleY->index  = 2;
-		unit->msgScaleY->value  = ZIN0(2);
-
-		zmq_send(unit->mWorld->mDataMsgSock, unit->msgScaleY, sizeof(DataMsg), 0);
+		zmq_send(unit->mWorld->mDataMsgSock, unit->msgTime, sizeof(DataMsg), 0);
+		zmq_send(unit->mWorld->mDataMsgSock, unit->msgSpeed, sizeof(DataMsg), 0);
+		zmq_send(unit->mWorld->mDataMsgSock, unit->msgStrength, sizeof(DataMsg), 0);
+		zmq_send(unit->mWorld->mDataMsgSock, unit->msgFreq, sizeof(DataMsg), 0);
 	}
 
 	ZOUT0(0) = 0.f; // always output zero
 }
 
-void GLTexScale_Dtor(GLTexScale *unit)
+void Ripple_Dtor(Ripple *unit)
 {
-	RTFree(unit->mWorld, unit->msgScaleX);
-	RTFree(unit->mWorld, unit->msgScaleY);
-}
-
-//////////////////////////////////////////////////////////////////////////////////
-
-void GLTexTrans_Ctor(GLTexTrans *unit)
-{
-	SETCALC(GLTexTrans_next_k);
-	unit->rateDivideCounter = 0;
-
-	unit->msgTransX = (DataMsg *)RTAlloc(unit->mWorld, sizeof(DataMsg));
-	unit->msgTransX->msgType = 0;
-	unit->msgTransY = (DataMsg *)RTAlloc(unit->mWorld, sizeof(DataMsg));
-	unit->msgTransY->msgType = 0;
-	GLTexTrans_next_k(unit, 1);
-}
-
-void GLTexTrans_next_k(GLTexTrans *unit, int inNumSamples)
-{
-
-	if (SHOULD_SEND) {
-		// prepare messages to send to the video server
-		unit->msgTransX->nodeID = unit->mParent->mNode.mID;
-		unit->msgTransX->unitID = unit->mUnitIndex;
-		unit->msgTransX->index  = 1;
-		unit->msgTransX->value  = ZIN0(1);
-
-		zmq_send(unit->mWorld->mDataMsgSock, unit->msgTransX, sizeof(DataMsg), 0);
-
-		unit->msgTransY->nodeID = unit->mParent->mNode.mID;
-		unit->msgTransY->unitID = unit->mUnitIndex;
-		unit->msgTransY->index  = 2;
-		unit->msgTransY->value  = ZIN0(2);
-
-		zmq_send(unit->mWorld->mDataMsgSock, unit->msgTransY, sizeof(DataMsg), 0);
-	}
-
-	ZOUT0(0) = 0.f; // always output zero
-}
-
-void GLTexTrans_Dtor(GLTexTrans *unit)
-{
-	RTFree(unit->mWorld, unit->msgTransX);
-	RTFree(unit->mWorld, unit->msgTransY);
-}
-
-//////////////////////////////////////////////////////////////////////////////////
-
-void GLRotate_Ctor(GLRotate *unit)
-{
-	SETCALC(GLRotate_next_k);
-	unit->rateDivideCounter = 0;
-
-	unit->msgAngle = (DataMsg *)RTAlloc(unit->mWorld, sizeof(DataMsg));
-	unit->msgAngle->msgType = 0;
-	GLRotate_next_k(unit, 1);
-}
-
-void GLRotate_next_k(GLRotate *unit, int inNumSamples)
-{
-
-	if (SHOULD_SEND) {
-		// prepare messages to send to the video server
-		unit->msgAngle->nodeID = unit->mParent->mNode.mID;
-		unit->msgAngle->unitID = unit->mUnitIndex;
-		unit->msgAngle->index  = 1;
-		unit->msgAngle->value  = ZIN0(1);
-
-		zmq_send(unit->mWorld->mDataMsgSock, unit->msgAngle, sizeof(DataMsg), 0);
-	}
-
-	ZOUT0(0) = 0.f; // always output zero
-}
-
-void GLRotate_Dtor(GLRotate *unit)
-{
-	RTFree(unit->mWorld, unit->msgAngle);
+	RTFree(unit->mWorld, unit->msgTime);
+	RTFree(unit->mWorld, unit->msgSpeed);
+	RTFree(unit->mWorld, unit->msgStrength);
+	RTFree(unit->mWorld, unit->msgFreq);
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -1272,6 +1106,125 @@ void Rotate_next_k(Rotate *unit, int inNumSamples)
 void Rotate_Dtor(Rotate *unit)
 {
 	RTFree(unit->mWorld, unit->msgAngle);
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+
+void Scale2_Ctor(Scale2 *unit)
+{
+	SETCALC(Scale2_next_k);
+	unit->rateDivideCounter = 0;
+
+	unit->msgScale = (DataMsg *)RTAlloc(unit->mWorld, sizeof(DataMsg));
+	unit->msgScale->msgType = 0;
+	Scale2_next_k(unit, 1);
+}
+
+void Scale2_next_k(Scale2 *unit, int inNumSamples)
+{
+
+	if (SHOULD_SEND) {
+		// prepare messages to send to the video server
+		unit->msgScale->nodeID = unit->mParent->mNode.mID;
+		unit->msgScale->unitID = unit->mUnitIndex;
+		unit->msgScale->index  = 1;
+		unit->msgScale->value  = ZIN0(1);
+
+		zmq_send(unit->mWorld->mDataMsgSock, unit->msgScale, sizeof(DataMsg), 0);
+	}
+
+	ZOUT0(0) = 0.f; // always output zero
+}
+
+void Scale2_Dtor(Scale2 *unit)
+{
+	RTFree(unit->mWorld, unit->msgScale);
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+
+void ScaleXY_Ctor(ScaleXY *unit)
+{
+	SETCALC(ScaleXY_next_k);
+	unit->rateDivideCounter = 0;
+
+	unit->msgScaleX = (DataMsg *)RTAlloc(unit->mWorld, sizeof(DataMsg));
+	unit->msgScaleX->msgType = 0;
+	unit->msgScaleY = (DataMsg *)RTAlloc(unit->mWorld, sizeof(DataMsg));
+	unit->msgScaleY->msgType = 0;
+	ScaleXY_next_k(unit, 1);
+}
+
+void ScaleXY_next_k(ScaleXY *unit, int inNumSamples)
+{
+
+	if (SHOULD_SEND) {
+		// prepare messages to send to the video server
+		unit->msgScaleX->nodeID = unit->mParent->mNode.mID;
+		unit->msgScaleX->unitID = unit->mUnitIndex;
+		unit->msgScaleX->index  = 1;
+		unit->msgScaleX->value  = ZIN0(1);
+
+		zmq_send(unit->mWorld->mDataMsgSock, unit->msgScaleX, sizeof(DataMsg), 0);
+
+		unit->msgScaleY->nodeID = unit->mParent->mNode.mID;
+		unit->msgScaleY->unitID = unit->mUnitIndex;
+		unit->msgScaleY->index  = 2;
+		unit->msgScaleY->value  = ZIN0(2);
+
+		zmq_send(unit->mWorld->mDataMsgSock, unit->msgScaleY, sizeof(DataMsg), 0);
+	}
+
+	ZOUT0(0) = 0.f; // always output zero
+}
+
+void ScaleXY_Dtor(ScaleXY *unit)
+{
+	RTFree(unit->mWorld, unit->msgScaleX);
+	RTFree(unit->mWorld, unit->msgScaleY);
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+
+void Translate_Ctor(Translate *unit)
+{
+	SETCALC(Translate_next_k);
+	unit->rateDivideCounter = 0;
+
+	unit->msgTranslateX = (DataMsg *)RTAlloc(unit->mWorld, sizeof(DataMsg));
+	unit->msgTranslateX->msgType = 0;
+	unit->msgTranslateY = (DataMsg *)RTAlloc(unit->mWorld, sizeof(DataMsg));
+	unit->msgTranslateY->msgType = 0;
+	Translate_next_k(unit, 1);
+}
+
+void Translate_next_k(Translate *unit, int inNumSamples)
+{
+
+	if (SHOULD_SEND) {
+		// prepare messages to send to the video server
+		unit->msgTranslateX->nodeID = unit->mParent->mNode.mID;
+		unit->msgTranslateX->unitID = unit->mUnitIndex;
+		unit->msgTranslateX->index  = 1;
+		unit->msgTranslateX->value  = ZIN0(1);
+
+		zmq_send(unit->mWorld->mDataMsgSock, unit->msgTranslateX, sizeof(DataMsg), 0);
+
+		unit->msgTranslateY->nodeID = unit->mParent->mNode.mID;
+		unit->msgTranslateY->unitID = unit->mUnitIndex;
+		unit->msgTranslateY->index  = 2;
+		unit->msgTranslateY->value  = ZIN0(2);
+
+		zmq_send(unit->mWorld->mDataMsgSock, unit->msgTranslateY, sizeof(DataMsg), 0);
+	}
+
+	ZOUT0(0) = 0.f; // always output zero
+}
+
+void Translate_Dtor(Translate *unit)
+{
+	RTFree(unit->mWorld, unit->msgTranslateX);
+	RTFree(unit->mWorld, unit->msgTranslateY);
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -1440,76 +1393,6 @@ void SHKDesaturate_next_k(SHKDesaturate *unit, int inNumSamples)
 void SHKDesaturate_Dtor(SHKDesaturate *unit)
 {
 	RTFree(unit->mWorld, unit->msgStrength);
-}
-
-
-//////////////////////////////////////////////////////////////////////////////////
-
-void SHKWater_Ctor(SHKWater *unit)
-{
-	SETCALC(SHKWater_next_k);
-	unit->rateDivideCounter = 0;
-
-	unit->msgVidID = (VideoMsg *)RTAlloc(unit->mWorld, sizeof(VideoMsg));
-	unit->msgVidID->msgType = 1;
-	unit->msgTime = (DataMsg *)RTAlloc(unit->mWorld, sizeof(DataMsg));
-	unit->msgTime->msgType = 0;
-	unit->msgSpeed = (DataMsg *)RTAlloc(unit->mWorld, sizeof(DataMsg));
-	unit->msgSpeed->msgType = 0;
-	unit->msgStrength = (DataMsg *)RTAlloc(unit->mWorld, sizeof(DataMsg));
-	unit->msgStrength->msgType = 0;
-	unit->msgFreq = (DataMsg *)RTAlloc(unit->mWorld, sizeof(DataMsg));
-	unit->msgFreq->msgType = 0;
-
-	SHKWater_next_k(unit, 1);
-}
-
-void SHKWater_next_k(SHKWater *unit, int inNumSamples)
-{
-	if (SHOULD_SEND) {
-		int32_t inVidID = (int32_t)ZIN0(0);
-		float inTime = ZIN0(1);
-		float inSpeed = ZIN0(2);
-		float inStrength = ZIN0(3);
-		float inFreq = ZIN0(4);
-
-		// prepare messages to send to the video server
-		unit->msgVidID->nodeID = unit->mParent->mNode.mID;
-		unit->msgVidID->unitID = unit->mUnitIndex;
-		unit->msgVidID->index  = 0;
-		unit->msgVidID->videoID = inVidID;
-		unit->msgTime->nodeID = unit->mParent->mNode.mID;
-		unit->msgTime->unitID = unit->mUnitIndex;
-		unit->msgTime->index  = 1;
-		unit->msgTime->value  = inTime;
-		unit->msgSpeed->nodeID = unit->mParent->mNode.mID;
-		unit->msgSpeed->unitID = unit->mUnitIndex;
-		unit->msgSpeed->index  = 2;
-		unit->msgSpeed->value  = inTime;
-		unit->msgStrength->nodeID = unit->mParent->mNode.mID;
-		unit->msgStrength->unitID = unit->mUnitIndex;
-		unit->msgStrength->index  = 3;
-		unit->msgStrength->value  = inTime;
-		unit->msgFreq->nodeID = unit->mParent->mNode.mID;
-		unit->msgFreq->unitID = unit->mUnitIndex;
-		unit->msgFreq->index  = 4;
-		unit->msgFreq->value  = inTime;
-
-		zmq_send(unit->mWorld->mDataMsgSock, unit->msgTime, sizeof(DataMsg), 0);
-		zmq_send(unit->mWorld->mDataMsgSock, unit->msgSpeed, sizeof(DataMsg), 0);
-		zmq_send(unit->mWorld->mDataMsgSock, unit->msgStrength, sizeof(DataMsg), 0);
-		zmq_send(unit->mWorld->mDataMsgSock, unit->msgFreq, sizeof(DataMsg), 0);
-	}
-
-	ZOUT0(0) = 0.f; // always output zero
-}
-
-void SHKWater_Dtor(SHKWater *unit)
-{
-	RTFree(unit->mWorld, unit->msgTime);
-	RTFree(unit->mWorld, unit->msgSpeed);
-	RTFree(unit->mWorld, unit->msgStrength);
-	RTFree(unit->mWorld, unit->msgFreq);
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -2312,23 +2195,21 @@ PluginLoad(Video)
 	DefineDtorUnit(GLRGBA);
 	DefineDtorUnit(GLMix);
 	DefineDtorUnit(GLBlend);
-	DefineDtorUnit(GLShowImgTex);
-	DefineDtorUnit(GLShowVidTex);
-	DefineSimpleUnit(GLTexCoords);
-	DefineSimpleUnit(GLTexFlipX);
-	DefineSimpleUnit(GLTexFlipY);
-	DefineDtorUnit(GLTexMirrorX);
-	DefineDtorUnit(GLTexMirrorY);
-	DefineDtorUnit(GLTexScale);
-	DefineDtorUnit(GLTexTrans);
-	DefineDtorUnit(GLRotate);
+
+	DefineSimpleUnit(FlipX);
+	DefineSimpleUnit(FlipY);
+	DefineDtorUnit(MirrorX);
+	DefineDtorUnit(MirrorY);
+	DefineDtorUnit(Ripple);
 	DefineDtorUnit(Rotate);
+	DefineDtorUnit(Scale2);
+	DefineDtorUnit(ScaleXY);
+	DefineDtorUnit(Translate);
 
 	DefineDtorUnit(SHKCheckerboard);
 	DefineDtorUnit(SHKCircleWave);
 	DefineSimpleUnit(SHKColorInvert);
 	DefineDtorUnit(SHKDesaturate);
-	DefineDtorUnit(SHKWater);
 
 	DefineDtorUnit(GLFunc1);
 	DefineDtorUnit(GLFunc2);

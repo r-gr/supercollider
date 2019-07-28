@@ -233,16 +233,17 @@ void process_graph_fn(FifoMsg *inMsg)
 		unit = graph->mCalcUnits[i];
 
 		json j_unit;
-		j_unit["unitName"] = (char *) unit->mUnitDef->mUnitDefName;
-		j_unit["unitID"] = unit->mUnitIndex;
-		j_unit["unitInputs"] = json::array({});
-		j_unit["unitOutputs"] = json::array({});
+		j_unit["scUnitName"] = (char *) unit->mUnitDef->mUnitDefName;
+		j_unit["scUnitID"] = unit->mUnitIndex;
+		j_unit["scNodeID"] = graph->mNode.mID;
+		j_unit["scUnitInputs"] = json::array({});
+		j_unit["scUnitOutputs"] = json::array({});
 
 		for (uint32_t j = 0; j < unit->mNumInputs; j++) {
 			wire = unit->mInput[j];
 			for (uint32_t k = 0; k < graph->mNumWires; k++) {
 				if (wire == &(graph->mWire[k])) {
-					j_unit["unitInputs"][j] = k;
+					j_unit["scUnitInputs"][j] = k;
 					break;
 				}
 			}
@@ -252,7 +253,7 @@ void process_graph_fn(FifoMsg *inMsg)
 			wire = unit->mOutput[j];
 			for (uint32_t k = 0; k < graph->mNumWires; k++) {
 				if (wire == &(graph->mWire[k])) {
-					j_unit["unitOutputs"][j] = k;
+					j_unit["scUnitOutputs"][j] = k;
 					break;
 				}
 			}

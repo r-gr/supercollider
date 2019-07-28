@@ -94,65 +94,63 @@ GLBlend : VideoUGen {
     }
 }
 
-GLShowImgTex : VideoUGen {
-    *fr { arg imgID, coords;
-        ^this.new(\control, imgID, coords)
-    }
-}
 
-GLShowVidTex : VideoUGen {
-    *fr { arg vidID, coords;
-        ^this.new(\control, vidID, coords)
-    }
-}
 
-GLTexCoords : VideoUGen {
-    *fr {
-        ^this.new(\control)
-    }
-}
-
-GLTexFlipX : VideoUGen {
+FlipX : VideoUGen {
     *fr { arg in;
         ^this.new(\control, in)
     }
 }
 
-GLTexFlipY : VideoUGen {
+FlipY : VideoUGen {
     *fr { arg in;
         ^this.new(\control, in)
     }
 }
 
-GLTexMirrorX : VideoUGen {
+MirrorX : VideoUGen {
     *fr { arg in, mirrorXPos, polarity=0;
         ^this.new(\control, in, mirrorXPos, polarity)
     }
 }
 
-GLTexMirrorY : VideoUGen {
+MirrorY : VideoUGen {
     *fr { arg in, mirrorYPos, polarity=0;
         ^this.new(\control, in, mirrorYPos, polarity)
     }
 }
 
-GLTexScale : VideoUGen {
+Ripple : SHKUGen {
+    *fr { arg in, time, speed, strength, frequency;
+        ^this.new(\control, in, time, speed, strength, frequency)
+    }
+}
+
+Rotate : VideoUGen {
+    *fr { arg in, angle;
+        ^this.new(\control, in, angle)
+    }
+}
+
+Scale2 : VideoUGen {
+    *fr { arg in, scale=1;
+        ^this.new(\control, in, scale)
+    }
+}
+
+ScaleXY : VideoUGen {
     *fr { arg in, scaleX=1, scaleY=1;
         ^this.new(\control, in, scaleX, scaleY)
     }
 }
 
-GLTexTrans : VideoUGen {
+Translate : VideoUGen {
     *fr { arg in, translateX=0, translateY=0;
         ^this.new(\control, in, translateX, translateY)
     }
 }
 
-GLRotate : VideoUGen {
-    *fr { arg coords, angle;
-        ^this.new(\control, coords, angle)
-    }
-}
+
 
 GLFunc1 : VideoUGen {
     *fr { arg arg1;

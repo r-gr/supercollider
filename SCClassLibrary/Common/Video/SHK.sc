@@ -27,9 +27,3 @@ SHKDesaturate : SHKUGen {
         ^this.new(\control, in, strength)
     }
 }
-
-SHKWater : SHKUGen {
-    *fr { arg texture, time, speed, strength, frequency;
-        ^this.new(\control, texture, time, speed, strength, frequency)
-    }
-}
