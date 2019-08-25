@@ -110,6 +110,7 @@ struct World
 	void *mZMQCtx;
 	void *mCmdMsgSock;
 	void *mDataMsgSock;
+	void *mRespSock;
 };
 
 inline SndBuf* World_GetBuf(struct World *inWorld, uint32 index)

@@ -479,22 +479,28 @@ World* World_New(WorldOptions *inOptions)
 			}
 
 			world->mZMQCtx = ctx;
-			world->mCmdMsgSock = zmq_socket(ctx, ZMQ_PUSH);
+			world->mCmdMsgSock  = zmq_socket(ctx, ZMQ_PUSH);
 			world->mDataMsgSock = zmq_socket(ctx, ZMQ_PUB);
-			if (!world->mCmdMsgSock || !world->mDataMsgSock) {
+			world->mRespSock    = zmq_socket(ctx, ZMQ_PULL);
+			if (!world->mCmdMsgSock || !world->mDataMsgSock || !world->mRespSock) {
 				scprintf("could not create ZeroMQ sockets.\n");
 				return 0;
 			}
 
 			int rc;
-			rc = zmq_bind(world->mCmdMsgSock, "ipc://@sc-video_cmd-msgs");
+			rc = zmq_bind(world->mCmdMsgSock, "ipc://@scvid_cmd-msgs");
 			if (rc != 0) {
 				scprintf("could not bind to ZeroMQ command message socket.\n");
 				return 0;
 			}
-			rc = zmq_bind(world->mDataMsgSock, "ipc://@sc-video_data-msgs");
+			rc = zmq_bind(world->mDataMsgSock, "ipc://@scvid_data-msgs");
 			if (rc != 0) {
 				scprintf("could not bind to ZeroMQ data message socket.\n");
+				return 0;
+			}
+			rc = zmq_connect(world->mRespSock, "ipc://@scvid_responses");
+			if (rc != 0) {
+				scprintf("could not connect to ZeroMQ response socket.\n");
 				return 0;
 			}
 		} else {

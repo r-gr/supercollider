@@ -152,6 +152,14 @@ Translate : VideoUGen {
 
 
 
+VidRd : VideoUGen {
+    *fr { arg vidID, phase=0.0;
+        ^this.new(\control, vidID, phase)
+    }
+}
+
+
+
 GLFunc1 : VideoUGen {
     *fr { arg arg1;
         ^this.new(\control, arg1)

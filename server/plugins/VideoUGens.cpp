@@ -40,7 +40,7 @@
 
 struct IPCMsg
 {
-	uint16_t msgType;   // 0 = data; 1 = video; 2 = image
+	uint16_t msgType;   // 0 = data; 1 = video; 2 = image; 3 = video playback head
 	uint16_t index;
 	int32_t nodeID;
 	int32_t unitID;
@@ -51,14 +51,23 @@ struct DataMsg : public IPCMsg
 	float value;
 };
 
-struct VideoMsg : public IPCMsg
+struct PlayVidMsg : public IPCMsg
 {
 	int32_t videoID;
+	float   vidRate;
+	int32_t vidLoop;
 };
 
 struct ImageMsg : public IPCMsg
 {
 	int32_t imageID;
+};
+
+struct VidRdMsg : public IPCMsg
+{
+	int32_t videoID;
+	float   vidPhase;
+	int32_t _unusedPadding;
 };
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -108,11 +117,6 @@ struct GLOut : public VideoUnit
 struct GLPlayImg : public VideoUnit
 {
 	ImageMsg *msgImgID;
-};
-
-struct GLPlayVid : public VideoUnit
-{
-	VideoMsg *msgVidID;
 };
 
 struct GLPrevFrame : public VideoUnit
@@ -186,6 +190,18 @@ struct ScaleXY : public VideoUnit
 struct Translate : public VideoUnit
 {
 	DataMsg *msgTranslateX, *msgTranslateY;
+};
+
+//////////////////////////////////////////////////////////////////////////////////
+
+struct PlayVid : public VideoUnit
+{
+	PlayVidMsg *msgPlayVid;
+};
+
+struct VidRd : public VideoUnit
+{
+	VidRdMsg *msgVidRd;
 };
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -296,9 +312,9 @@ void GLPlayImg_Ctor(GLPlayImg *unit);
 void GLPlayImg_next_k(GLPlayImg *unit, int inNumSamples);
 void GLPlayImg_Dtor(GLPlayImg *unit);
 
-void GLPlayVid_Ctor(GLPlayVid *unit);
-void GLPlayVid_next_k(GLPlayVid *unit, int inNumSamples);
-void GLPlayVid_Dtor(GLPlayVid *unit);
+void PlayVid_Ctor(PlayVid *unit);
+void PlayVid_next_k(PlayVid *unit, int inNumSamples);
+void PlayVid_Dtor(PlayVid *unit);
 
 void GLPrevFrame_Ctor(GLPrevFrame *unit);
 void GLPrevFrame_next_k(GLPrevFrame *unit, int inNumSamples);
@@ -356,6 +372,11 @@ void ScaleXY_Dtor(ScaleXY *unit);
 void Translate_Ctor(Translate *unit);
 void Translate_next_k(Translate *unit, int inNumSamples);
 void Translate_Dtor(Translate *unit);
+
+
+void VidRd_Ctor(VidRd *unit);
+void VidRd_next_k(VidRd *unit, int inNumSamples);
+void VidRd_Dtor(VidRd *unit);
 
 
 void SHKCheckerboard_Ctor(SHKCheckerboard *unit);
@@ -651,42 +672,6 @@ void GLPlayImg_next_k(GLPlayImg *unit, int inNumSamples)
 void GLPlayImg_Dtor(GLPlayImg *unit)
 {
 	RTFree(unit->mWorld, unit->msgImgID);
-}
-
-//////////////////////////////////////////////////////////////////////////////////
-
-void GLPlayVid_Ctor(GLPlayVid *unit)
-{
-	SETCALC(GLPlayVid_next_k);
-	unit->rateDivideCounter = 0;
-
-	unit->msgVidID = (VideoMsg *)RTAlloc(unit->mWorld, sizeof(VideoMsg));
-	unit->msgVidID->msgType = 1;
-	GLPlayVid_next_k(unit, 1);
-}
-
-void GLPlayVid_next_k(GLPlayVid *unit, int inNumSamples)
-{
-	if (SHOULD_SEND) {
-		// int32_t inVidID = (int32_t) DEMANDINPUT(0);
-		int32_t inVidID = (int32_t) ZIN0(0);
-
-		// prepare messages to send to the video server
-		unit->msgVidID->nodeID  = unit->mParent->mNode.mID;
-		unit->msgVidID->unitID  = unit->mUnitIndex;
-		unit->msgVidID->index   = 0;
-		unit->msgVidID->videoID = inVidID;
-
-		// send values to video server via nanomsg
-		zmq_send(unit->mWorld->mDataMsgSock, unit->msgVidID, sizeof(VideoMsg), 0);
-	}
-
-	ZOUT0(0) = 0.f; // always output zero
-}
-
-void GLPlayVid_Dtor(GLPlayVid *unit)
-{
-	RTFree(unit->mWorld, unit->msgVidID);
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -1225,6 +1210,82 @@ void Translate_Dtor(Translate *unit)
 {
 	RTFree(unit->mWorld, unit->msgTranslateX);
 	RTFree(unit->mWorld, unit->msgTranslateY);
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+
+void PlayVid_Ctor(PlayVid *unit)
+{
+	SETCALC(PlayVid_next_k);
+	unit->rateDivideCounter = 0;
+
+	unit->msgPlayVid = (PlayVidMsg *)RTAlloc(unit->mWorld, sizeof(PlayVidMsg));
+	unit->msgPlayVid->msgType = 1;
+	PlayVid_next_k(unit, 1);
+}
+
+void PlayVid_next_k(PlayVid *unit, int inNumSamples)
+{
+	if (SHOULD_SEND) {
+		// int32_t inVidID = (int32_t) DEMANDINPUT(0);
+		int32_t inVidID   = (int32_t) ZIN0(0);
+		int32_t inVidLoop = (int32_t) ZIN0(2);
+
+		// prepare messages to send to the video server
+		unit->msgPlayVid->nodeID  = unit->mParent->mNode.mID;
+		unit->msgPlayVid->unitID  = unit->mUnitIndex;
+		unit->msgPlayVid->index   = 0;
+		unit->msgPlayVid->videoID = inVidID;
+		unit->msgPlayVid->vidRate = ZIN0(1);
+		unit->msgPlayVid->vidLoop = inVidLoop;
+
+		// send values to video server via nanomsg
+		zmq_send(unit->mWorld->mDataMsgSock, unit->msgPlayVid, sizeof(PlayVidMsg), 0);
+	}
+
+	ZOUT0(0) = 0.f; // always output zero
+}
+
+void PlayVid_Dtor(PlayVid *unit)
+{
+	RTFree(unit->mWorld, unit->msgPlayVid);
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+
+void VidRd_Ctor(VidRd *unit)
+{
+	SETCALC(VidRd_next_k);
+	unit->rateDivideCounter = 0;
+
+	unit->msgVidRd = (VidRdMsg *)RTAlloc(unit->mWorld, sizeof(VidRdMsg));
+	unit->msgVidRd->msgType = 3;
+	VidRd_next_k(unit, 1);
+}
+
+void VidRd_next_k(VidRd *unit, int inNumSamples)
+{
+	if (SHOULD_SEND) {
+		int32_t inVidID = (int32_t) ZIN0(0);
+
+		// prepare messages to send to the video server
+		unit->msgVidRd->nodeID   = unit->mParent->mNode.mID;
+		unit->msgVidRd->unitID   = unit->mUnitIndex;
+		unit->msgVidRd->index    = 0;
+		unit->msgVidRd->videoID  = inVidID;
+		unit->msgVidRd->vidPhase = ZIN0(1);
+		unit->msgVidRd->_unusedPadding = 0; // probably not necessary
+
+		// send values to video server via nanomsg
+		zmq_send(unit->mWorld->mDataMsgSock, unit->msgVidRd, sizeof(VidRdMsg), 0);
+	}
+
+	ZOUT0(0) = 0.f; // always output zero
+}
+
+void VidRd_Dtor(VidRd *unit)
+{
+	RTFree(unit->mWorld, unit->msgVidRd);
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -2188,7 +2249,6 @@ PluginLoad(Video)
 	DefineSimpleUnit(GLWhite);
 	DefineSimpleUnit(GLOut);
 	DefineDtorUnit(GLPlayImg);
-	DefineDtorUnit(GLPlayVid);
 	DefineSimpleUnit(GLPrevFrame);
 	DefineSimpleUnit(GLPrevFrame2);
 	DefineDtorUnit(GLRGB);
@@ -2205,6 +2265,9 @@ PluginLoad(Video)
 	DefineDtorUnit(Scale2);
 	DefineDtorUnit(ScaleXY);
 	DefineDtorUnit(Translate);
+
+	DefineDtorUnit(PlayVid);
+	DefineDtorUnit(VidRd);
 
 	DefineDtorUnit(SHKCheckerboard);
 	DefineDtorUnit(SHKCircleWave);
