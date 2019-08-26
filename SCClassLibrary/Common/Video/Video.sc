@@ -52,12 +52,6 @@ GLPlayImg : VideoUGen {
     }
 }
 
-GLPlayVid : VideoUGen {
-    *fr { arg vidID;
-        ^this.new(\control, vidID)
-    }
-}
-
 GLPrevFrame : VideoUGen {
     *fr {
         ^this.new(\control)
@@ -151,6 +145,12 @@ Translate : VideoUGen {
 }
 
 
+
+PlayVid : VideoUGen {
+    *fr { arg vidID, rate=1.0, loop=1;
+        ^this.new(\control, vidID, rate, loop)
+    }
+}
 
 VidRd : VideoUGen {
     *fr { arg vidID, phase=0.0;

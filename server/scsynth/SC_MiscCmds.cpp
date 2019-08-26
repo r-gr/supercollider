@@ -1920,11 +1920,9 @@ SCErr meth_gl_v_new(World *inWorld, int inSize, char *inData, ReplyAddress *inRe
 	sc_msg_iter msg(inSize, inData);
 	int32 videoID = msg.geti();
 	const char* videoPath = msg.gets();
-	float rate = msg.getf();
-	int loop = msg.geti(); // booleans become integers 1 and 0?
 	int32 windowID = msg.geti();
 
-	create_gl_video(inWorld, videoID, videoPath, rate, loop, windowID);
+	create_gl_video(inWorld, videoID, videoPath, windowID);
 
 	return kSCErr_None;
 }
@@ -1935,11 +1933,9 @@ SCErr meth_gl_v_read(World *inWorld, int inSize, char *inData, ReplyAddress *inR
 	sc_msg_iter msg(inSize, inData);
 	int32 videoID = msg.geti();
 	const char* videoPath = msg.gets();
-	float rate = msg.getf();
-	int loop = msg.geti(); // booleans become integers 1 and 0?
 	int32 windowID = msg.geti();
 
-	create_gl_read_video(inWorld, videoID, videoPath, rate, loop, windowID);
+	create_gl_read_video(inWorld, videoID, videoPath, windowID);
 
 	return kSCErr_None;
 }

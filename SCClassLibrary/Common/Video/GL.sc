@@ -12,14 +12,14 @@ GLWindow {
 }
 
 GLVideo {
-	*new { arg vidID, filepath, rate=1.0, loop=true, targetWindow=0, server;
+	*new { arg vidID, filepath, targetWindow=0, server;
 		server = server ? Server.default;
-		^server.listSendMsg(["/gl_v_new", vidID, filepath, rate, loop, targetWindow])
+		^server.listSendMsg(["/gl_v_new", vidID, filepath, targetWindow])
 	}
 
-	*read { arg vidID, filepath, rate=1.0, loop=true, targetWindow=0, server;
+	*read { arg vidID, filepath, targetWindow=0, server;
 		server = server ? Server.default;
-		^server.listSendMsg(["/gl_v_read", vidID, filepath, rate, loop, targetWindow])
+		^server.listSendMsg(["/gl_v_read", vidID, filepath, targetWindow])
 	}
 
 	*free { arg vidID, targetWindow=0, server;

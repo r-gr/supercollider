@@ -131,7 +131,7 @@ void create_gl_window(World *inWorld, int32_t windowID, int32_t width, int32_t h
 	inWorld->hw->mAudioDriver->SendMsgFromEngine(msg);
 }
 
-void create_gl_video(World *inWorld, int32_t videoID, const char *videoPath, float rate, bool loop, int32_t windowID)
+void create_gl_video(World *inWorld, int32_t videoID, const char *videoPath, int32_t windowID)
 {
 	FifoMsg msg;
 
@@ -139,15 +139,15 @@ void create_gl_video(World *inWorld, int32_t videoID, const char *videoPath, flo
 	video->inWorld = inWorld;
 	video->id = videoID;
 	video->filepath = videoPath;
-	video->rate = rate;
-	video->loop = loop;
+	// video->rate = rate;
+	// video->loop = loop;
 	video->windowID = windowID;
 
 	msg.Set(inWorld, create_gl_video_fn, 0, (void *)video);
 	inWorld->hw->mAudioDriver->SendMsgFromEngine(msg);
 }
 
-void create_gl_read_video(World *inWorld, int32_t videoID, const char *videoPath, float rate, bool loop, int32_t windowID)
+void create_gl_read_video(World *inWorld, int32_t videoID, const char *videoPath, int32_t windowID)
 {
 	FifoMsg msg;
 
@@ -155,8 +155,8 @@ void create_gl_read_video(World *inWorld, int32_t videoID, const char *videoPath
 	video->inWorld = inWorld;
 	video->id = videoID;
 	video->filepath = videoPath;
-	video->rate = rate;
-	video->loop = loop;
+	// video->rate = rate;
+	// video->loop = loop;
 	video->windowID = windowID;
 
 	msg.Set(inWorld, create_gl_read_video_fn, 0, (void *)video);
@@ -329,8 +329,8 @@ void create_gl_video_fn(FifoMsg *inMsg)
 		{"tag", "GLVideoNew"},
 		{"videoID", video->id},
 		{"videoPath", video->filepath},
-		{"videoRate", video->rate},
-		{"videoLoop", video->loop},
+		// {"videoRate", video->rate},
+		// {"videoLoop", video->loop},
 		{"windowID", video->windowID}
 	};
 
@@ -355,8 +355,8 @@ void create_gl_read_video_fn(FifoMsg *inMsg)
 		{"tag", "GLVideoRead"},
 		{"videoID", video->id},
 		{"videoPath", video->filepath},
-		{"videoRate", video->rate},
-		{"videoLoop", video->loop},
+		// {"videoRate", video->rate},
+		// {"videoLoop", video->loop},
 		{"windowID", video->windowID}
 	};
 
