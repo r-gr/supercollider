@@ -1229,7 +1229,7 @@ void PlayVid_next_k(PlayVid *unit, int inNumSamples)
 	if (SHOULD_SEND) {
 		// int32_t inVidID = (int32_t) DEMANDINPUT(0);
 		int32_t inVidID   = (int32_t) ZIN0(0);
-		int32_t inVidLoop = (int32_t) ZIN0(2);
+		int32_t inVidLoop = (int32_t) (ZIN0(2) != 0);
 
 		// prepare messages to send to the video server
 		unit->msgPlayVid->nodeID  = unit->mParent->mNode.mID;

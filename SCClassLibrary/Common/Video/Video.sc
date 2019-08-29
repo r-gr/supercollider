@@ -147,7 +147,7 @@ Translate : VideoUGen {
 
 
 PlayVid : VideoUGen {
-    *fr { arg vidID, rate=1.0, loop=1;
+    *fr { arg vidID, rate=1.0, loop=1.0;
         ^this.new(\control, vidID, rate, loop)
     }
 }
