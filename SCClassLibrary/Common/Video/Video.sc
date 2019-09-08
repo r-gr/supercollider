@@ -158,6 +158,18 @@ VidRd : VideoUGen {
     }
 }
 
+DelBufRd : VideoUGen {
+    *fr { arg bufID;
+        ^this.new(\control, bufID)
+    }
+}
+
+DelBufWr : VideoUGen {
+    *fr { arg in, bufID;
+        ^this.new(\control, in, bufID)
+    }
+}
+
 
 
 GLFunc1 : VideoUGen {

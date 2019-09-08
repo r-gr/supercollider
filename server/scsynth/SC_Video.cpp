@@ -83,6 +83,19 @@ typedef struct GLImageFree {
 	int32_t windowID;
 } GLImageFree_t;
 
+typedef struct GLDelBufNew {
+	World *inWorld;
+	int32_t id;
+	int32_t len;
+	int32_t windowID;
+} GLDelBufNew_t;
+
+typedef struct GLDelBufFree {
+	World *inWorld;
+	int32_t id;
+	int32_t windowID;
+} GLDelBufFree_t;
+
 typedef struct {
 	World *mWorld;
 	int32_t nodeID;
@@ -91,13 +104,17 @@ typedef struct {
 
 void process_graph_fn(FifoMsg *inMsg);
 void video_free_node_fn(FifoMsg *inMsg);
+
 void create_gl_window_fn(FifoMsg *inMsg);
 void create_gl_video_fn(FifoMsg *inMsg);
 void create_gl_read_video_fn(FifoMsg *inMsg);
 void create_gl_image_fn(FifoMsg *inMsg);
+void create_gl_delBuf_fn(FifoMsg *inMsg);
+
 void free_gl_window_fn(FifoMsg *inMsg);
 void free_gl_video_fn(FifoMsg *inMsg);
 void free_gl_image_fn(FifoMsg *inMsg);
+void free_gl_delBuf_fn(FifoMsg *inMsg);
 
 
 void process_graph(World *inWorld, Graph *graph)
@@ -116,6 +133,7 @@ void video_free_node(World *inWorld, int32_t nodeID)
 	msg.Set(inWorld, video_free_node_fn, 0, (void *)data);
 	inWorld->hw->mAudioDriver->SendMsgFromEngine(msg);
 }
+
 
 void create_gl_window(World *inWorld, int32_t windowID, int32_t width, int32_t height)
 {
@@ -139,8 +157,6 @@ void create_gl_video(World *inWorld, int32_t videoID, const char *videoPath, int
 	video->inWorld = inWorld;
 	video->id = videoID;
 	video->filepath = videoPath;
-	// video->rate = rate;
-	// video->loop = loop;
 	video->windowID = windowID;
 
 	msg.Set(inWorld, create_gl_video_fn, 0, (void *)video);
@@ -155,8 +171,6 @@ void create_gl_read_video(World *inWorld, int32_t videoID, const char *videoPath
 	video->inWorld = inWorld;
 	video->id = videoID;
 	video->filepath = videoPath;
-	// video->rate = rate;
-	// video->loop = loop;
 	video->windowID = windowID;
 
 	msg.Set(inWorld, create_gl_read_video_fn, 0, (void *)video);
@@ -176,6 +190,21 @@ void create_gl_image(World *inWorld, int32_t imageID, const char *imagePath, int
 	msg.Set(inWorld, create_gl_image_fn, 0, (void *)image);
 	inWorld->hw->mAudioDriver->SendMsgFromEngine(msg);
 }
+
+void create_gl_delBuf(World *inWorld, int32_t bufID, int32_t bufLen, int32_t windowID)
+{
+	FifoMsg msg;
+
+	GLDelBufNew_t *delBuf = (GLDelBufNew_t *) World_Alloc(inWorld, sizeof(GLDelBufNew_t));
+	delBuf->inWorld = inWorld;
+	delBuf->id = bufID;
+	delBuf->len = bufLen;
+	delBuf->windowID = windowID;
+
+	msg.Set(inWorld, create_gl_delBuf_fn, 0, (void *)delBuf);
+	inWorld->hw->mAudioDriver->SendMsgFromEngine(msg);
+}
+
 
 void free_gl_window(World *inWorld, int32_t windowID)
 {
@@ -215,6 +244,25 @@ void free_gl_image(World *inWorld, int32_t imageID, int32_t windowID)
 	inWorld->hw->mAudioDriver->SendMsgFromEngine(msg);
 }
 
+void free_gl_delBuf(World *inWorld, int32_t bufID, int32_t windowID)
+{
+	FifoMsg msg;
+
+	GLDelBufFree_t *delBuf = (GLDelBufFree_t *) World_Alloc(inWorld, sizeof(GLDelBufFree_t));
+	delBuf->inWorld = inWorld;
+	delBuf->id = bufID;
+	delBuf->windowID = windowID;
+
+	msg.Set(inWorld, free_gl_delBuf_fn, 0, (void *)delBuf);
+	inWorld->hw->mAudioDriver->SendMsgFromEngine(msg);
+}
+
+
+
+/* Functions to be executed in NRT thread */
+
+
+
 void process_graph_fn(FifoMsg *inMsg)
 {
 	Graph *graph = (Graph *) inMsg->mData;
@@ -241,22 +289,12 @@ void process_graph_fn(FifoMsg *inMsg)
 
 		for (uint32_t j = 0; j < unit->mNumInputs; j++) {
 			wire = unit->mInput[j];
-			for (uint32_t k = 0; k < graph->mNumWires; k++) {
-				if (wire == &(graph->mWire[k])) {
-					j_unit["scUnitInputs"][j] = k;
-					break;
-				}
-			}
+			j_unit["scUnitInputs"][j] = wire->mWireID;
 		}
 
 		for (uint32_t j = 0; j < unit->mNumOutputs; j++) {
 			wire = unit->mOutput[j];
-			for (uint32_t k = 0; k < graph->mNumWires; k++) {
-				if (wire == &(graph->mWire[k])) {
-					j_unit["scUnitOutputs"][j] = k;
-					break;
-				}
-			}
+			j_unit["scUnitOutputs"][j] = wire->mWireID;
 		}
 
 		j["units"][i] = j_unit;
@@ -397,6 +435,30 @@ void create_gl_image_fn(FifoMsg *inMsg)
 	World_Free(image->inWorld, image);
 }
 
+void create_gl_delBuf_fn(FifoMsg *inMsg)
+{
+	GLDelBufNew_t *delBuf = (GLDelBufNew_t *) inMsg->mData;
+
+	json j = {
+		{"tag", "DelBufNew"},
+		{"bufferID", delBuf->id},
+		{"bufferLen", delBuf->len},
+		{"windowID", delBuf->windowID}
+	};
+
+	int bytes;
+	std::string msg = j.dump();
+
+	scprintf("*** Debug: sending GL msg: %s\n", msg.c_str());
+
+	int rc = zmq_send(delBuf->inWorld->mCmdMsgSock, msg.c_str(), strlen(msg.c_str()), ZMQ_DONTWAIT);
+	if (rc < 0) {
+		scprintf("*** Error: could not send message to video server. zmq_send error: %s\n", zmq_strerror(errno));
+	}
+
+	World_Free(delBuf->inWorld, delBuf);
+}
+
 void free_gl_window_fn(FifoMsg *inMsg)
 {
 	GLWindowFree_t *window = (GLWindowFree_t *) inMsg->mData;
@@ -463,4 +525,27 @@ void free_gl_image_fn(FifoMsg *inMsg)
 	}
 
 	World_Free(image->inWorld, image);
+}
+
+void free_gl_delBuf_fn(FifoMsg *inMsg)
+{
+	GLDelBufFree_t *delBuf = (GLDelBufFree_t *) inMsg->mData;
+
+	json j = {
+		{"tag", "DelBufFree"},
+		{"bufferID", delBuf->id},
+		{"windowID", delBuf->windowID}
+	};
+
+	int bytes;
+	std::string msg = j.dump();
+
+	scprintf("*** Debug: sending GL msg: %s\n", msg.c_str());
+
+	int rc = zmq_send(delBuf->inWorld->mCmdMsgSock, msg.c_str(), strlen(msg.c_str()), ZMQ_DONTWAIT);
+	if (rc < 0) {
+		scprintf("*** Error: could not send message to video server. zmq_send error: %s\n", zmq_strerror(errno));
+	}
+
+	World_Free(delBuf->inWorld, delBuf);
 }

@@ -11,3 +11,5 @@ void create_gl_image(World *inWorld, int32_t imageID, const char *imagePath, int
 void free_gl_window(World *inWorld, int32_t windowID);
 void free_gl_video(World *inWorld, int32_t videoID, int32_t windowID);
 void free_gl_image(World *inWorld, int32_t imageID, int32_t windowID);
+void create_gl_delBuf(World *inWorld, int32_t bufID, int32_t bufLen, int32_t windowID);
+void free_gl_delBuf(World *inWorld, int32_t bufID, int32_t windowID);

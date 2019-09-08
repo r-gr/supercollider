@@ -429,6 +429,18 @@ void Graph_Ctor(World *inWorld, GraphDef *inGraphDef, Graph *graph, sc_msg_iter 
 		}
 	}
 
+	/* CUSTOM CODE FOR ALLOCATING WIRE IDS FOR VIDEO SERVER MODIFICATIONS.
+
+	   The extra nested loops are likely unnecessary but initial attempts to fit
+	   wire ID allocation into the above loops were unsuccessful.
+
+	   TODO: optimise to avoid these extra nested loops.
+	*/
+	for (uint32_t i = 0; i < graph->mNumWires; i++) {
+		graph->mWire[i].mWireID = i;
+	}
+	/* END CUSTOM VIDEO SERVER CODE */
+
 	inGraphDef->mRefCount ++ ;
 }
 

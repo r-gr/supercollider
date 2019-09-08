@@ -1977,6 +1977,31 @@ SCErr meth_gl_i_free(World *inWorld, int inSize, char *inData, ReplyAddress *inR
 	return kSCErr_None;
 }
 
+SCErr meth_gl_delBuf_new(World *inWorld, int inSize, char *inData, ReplyAddress *inReply);
+SCErr meth_gl_delBuf_new(World *inWorld, int inSize, char *inData, ReplyAddress *inReply)
+{
+	sc_msg_iter msg(inSize, inData);
+	int32 bufID = msg.geti();
+	int32 bufLen = msg.geti();
+	int32 windowID = msg.geti();
+
+	create_gl_delBuf(inWorld, bufID, bufLen, windowID);
+
+	return kSCErr_None;
+}
+
+SCErr meth_gl_delBuf_free(World *inWorld, int inSize, char *inData, ReplyAddress *inReply);
+SCErr meth_gl_delBuf_free(World *inWorld, int inSize, char *inData, ReplyAddress *inReply)
+{
+	sc_msg_iter msg(inSize, inData);
+	int32 bufID = msg.geti();
+	int32 windowID = msg.geti();
+
+	free_gl_delBuf(inWorld, bufID, windowID);
+
+	return kSCErr_None;
+}
+
 #define NEW_COMMAND(name) NewCommand(#name, cmd_##name, meth_##name)
 
 void initMiscCommands();
@@ -2075,4 +2100,6 @@ void initMiscCommands()
 	NEW_COMMAND(gl_v_free);
 	NEW_COMMAND(gl_i_new);
 	NEW_COMMAND(gl_i_free);
+	NEW_COMMAND(gl_delBuf_new);
+	NEW_COMMAND(gl_delBuf_free);
 }

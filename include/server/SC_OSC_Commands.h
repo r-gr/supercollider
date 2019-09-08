@@ -119,6 +119,8 @@ enum {
 	cmd_gl_v_free = 69,
 	cmd_gl_i_new = 70,
 	cmd_gl_i_free = 71,
+	cmd_gl_delBuf_new = 72,
+	cmd_gl_delBuf_free = 73,
 
-	NUMBER_OF_COMMANDS = 72 // 65 for non-video server
+	NUMBER_OF_COMMANDS = 74 // 65 for non-video server
 };

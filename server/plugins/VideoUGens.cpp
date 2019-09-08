@@ -40,7 +40,7 @@
 
 struct IPCMsg
 {
-	uint16_t msgType;   // 0 = data; 1 = video; 2 = image; 3 = video playback head
+	uint16_t msgType; // 0 = data; 1 = video; 2 = image; 3 = video playback head; 4/5 = delBuf rd/wr
 	uint16_t index;
 	int32_t nodeID;
 	int32_t unitID;
@@ -67,6 +67,18 @@ struct VidRdMsg : public IPCMsg
 {
 	int32_t videoID;
 	float   vidPhase;
+	int32_t _unusedPadding;
+};
+
+struct DelBufRdMsg : public IPCMsg
+{
+	int32_t bufID;
+};
+
+struct DelBufWrMsg : public IPCMsg
+{
+	int32_t bufID;
+	uint32_t wireID;
 	int32_t _unusedPadding;
 };
 
@@ -204,6 +216,16 @@ struct VidRd : public VideoUnit
 	VidRdMsg *msgVidRd;
 };
 
+struct DelBufRd : public VideoUnit
+{
+	DelBufRdMsg *msgDelBufRd;
+};
+
+struct DelBufWr : public VideoUnit
+{
+	DelBufWrMsg *msgDelBufWr;
+};
+
 //////////////////////////////////////////////////////////////////////////////////
 
 struct SHKCheckerboard : public VideoUnit
@@ -312,10 +334,6 @@ void GLPlayImg_Ctor(GLPlayImg *unit);
 void GLPlayImg_next_k(GLPlayImg *unit, int inNumSamples);
 void GLPlayImg_Dtor(GLPlayImg *unit);
 
-void PlayVid_Ctor(PlayVid *unit);
-void PlayVid_next_k(PlayVid *unit, int inNumSamples);
-void PlayVid_Dtor(PlayVid *unit);
-
 void GLPrevFrame_Ctor(GLPrevFrame *unit);
 void GLPrevFrame_next_k(GLPrevFrame *unit, int inNumSamples);
 
@@ -374,9 +392,21 @@ void Translate_next_k(Translate *unit, int inNumSamples);
 void Translate_Dtor(Translate *unit);
 
 
+void PlayVid_Ctor(PlayVid *unit);
+void PlayVid_next_k(PlayVid *unit, int inNumSamples);
+void PlayVid_Dtor(PlayVid *unit);
+
 void VidRd_Ctor(VidRd *unit);
 void VidRd_next_k(VidRd *unit, int inNumSamples);
 void VidRd_Dtor(VidRd *unit);
+
+void DelBufRd_Ctor(DelBufRd *unit);
+void DelBufRd_next_k(DelBufRd *unit, int inNumSamples);
+void DelBufRd_Dtor(DelBufRd *unit);
+
+void DelBufWr_Ctor(DelBufWr *unit);
+void DelBufWr_next_k(DelBufWr *unit, int inNumSamples);
+void DelBufWr_Dtor(DelBufWr *unit);
 
 
 void SHKCheckerboard_Ctor(SHKCheckerboard *unit);
@@ -1286,6 +1316,77 @@ void VidRd_next_k(VidRd *unit, int inNumSamples)
 void VidRd_Dtor(VidRd *unit)
 {
 	RTFree(unit->mWorld, unit->msgVidRd);
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+
+void DelBufRd_Ctor(DelBufRd *unit)
+{
+	SETCALC(DelBufRd_next_k);
+	unit->rateDivideCounter = 0;
+
+	unit->msgDelBufRd = (DelBufRdMsg *)RTAlloc(unit->mWorld, sizeof(DelBufRdMsg));
+	unit->msgDelBufRd->msgType = 4;
+	DelBufRd_next_k(unit, 1);
+}
+
+void DelBufRd_next_k(DelBufRd *unit, int inNumSamples)
+{
+	if (SHOULD_SEND) {
+		int32_t inBufID = (int32_t) ZIN0(0);
+
+		// prepare messages to send to the video server
+		unit->msgDelBufRd->nodeID = unit->mParent->mNode.mID;
+		unit->msgDelBufRd->unitID = unit->mUnitIndex;
+		unit->msgDelBufRd->index  = 0;
+		unit->msgDelBufRd->bufID  = inBufID;
+
+		// send values to video server via nanomsg
+		zmq_send(unit->mWorld->mDataMsgSock, unit->msgDelBufRd, sizeof(DelBufRdMsg), 0);
+	}
+
+	ZOUT0(0) = 0.f; // always output zero
+}
+
+void DelBufRd_Dtor(DelBufRd *unit)
+{
+	RTFree(unit->mWorld, unit->msgDelBufRd);
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+
+void DelBufWr_Ctor(DelBufWr *unit)
+{
+	SETCALC(DelBufWr_next_k);
+	unit->rateDivideCounter = 0;
+
+	unit->msgDelBufWr = (DelBufWrMsg *)RTAlloc(unit->mWorld, sizeof(DelBufWrMsg));
+	unit->msgDelBufWr->msgType = 5;
+	unit->msgDelBufWr->wireID = unit->mInput[0]->mWireID;
+	DelBufWr_next_k(unit, 1);
+}
+
+void DelBufWr_next_k(DelBufWr *unit, int inNumSamples)
+{
+	if (SHOULD_SEND) {
+		int32_t inBufID = (int32_t) ZIN0(1);
+
+		// prepare messages to send to the video server
+		unit->msgDelBufWr->nodeID = unit->mParent->mNode.mID;
+		unit->msgDelBufWr->unitID = unit->mUnitIndex;
+		unit->msgDelBufWr->index  = 1;
+		unit->msgDelBufWr->bufID  = inBufID;
+
+		// send values to video server via nanomsg
+		zmq_send(unit->mWorld->mDataMsgSock, unit->msgDelBufWr, sizeof(DelBufWrMsg), 0);
+	}
+
+	ZOUT0(0) = 0.f; // always output zero
+}
+
+void DelBufWr_Dtor(DelBufWr *unit)
+{
+	RTFree(unit->mWorld, unit->msgDelBufWr);
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -2268,6 +2369,8 @@ PluginLoad(Video)
 
 	DefineDtorUnit(PlayVid);
 	DefineDtorUnit(VidRd);
+	DefineDtorUnit(DelBufRd);
+	DefineDtorUnit(DelBufWr);
 
 	DefineDtorUnit(SHKCheckerboard);
 	DefineDtorUnit(SHKCircleWave);

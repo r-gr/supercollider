@@ -29,5 +29,6 @@ struct Wire
 	int32 mCalcRate;
 	float32 *mBuffer;
 	float32 mScalarValue;
+	uint32 mWireID;
 };
 typedef struct Wire Wire;

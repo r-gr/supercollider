@@ -39,3 +39,15 @@ GLImage {
 		^server.listSendMsg(["/gl_i_free", imgID, targetWindow])
 	}
 }
+
+GLDelBuf {
+	*new { arg bufID, bufLen=1, targetWindow=0, server;
+		server = server ? Server.default;
+		^server.listSendMsg(["/gl_delBuf_new", bufID, bufLen, targetWindow])
+	}
+
+	*free { arg bufID, targetWindow=0, server;
+		server = server ? Server.default;
+		^server.listSendMsg(["/gl_delBuf_free", bufID, targetWindow])
+	}
+}
