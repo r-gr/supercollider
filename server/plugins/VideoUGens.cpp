@@ -149,6 +149,10 @@ struct GLRGBA : public VideoUnit
 	DataMsg *msgR, *msgG, *msgB, *msgA;
 };
 
+struct GLAdd : public VideoUnit
+{
+};
+
 struct GLMix : public VideoUnit
 {
 	DataMsg *msgMix;
@@ -347,6 +351,9 @@ void GLRGB_Dtor(GLRGB *unit);
 void GLRGBA_Ctor(GLRGBA *unit);
 void GLRGBA_next_k(GLRGBA *unit, int inNumSamples);
 void GLRGBA_Dtor(GLRGBA *unit);
+
+void GLAdd_Ctor(GLAdd *unit);
+void GLAdd_next_k(GLAdd *unit, int inNumSamples);
 
 void GLMix_Ctor(GLMix *unit);
 void GLMix_next_k(GLMix *unit, int inNumSamples);
@@ -840,6 +847,19 @@ void GLRGBA_Dtor(GLRGBA *unit)
 	RTFree(unit->mWorld, unit->msgG);
 	RTFree(unit->mWorld, unit->msgB);
 	RTFree(unit->mWorld, unit->msgA);
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+
+void GLAdd_Ctor(GLAdd *unit)
+{
+	SETCALC(GLAdd_next_k);
+	GLAdd_next_k(unit, 1);
+}
+
+void GLAdd_next_k(GLAdd *unit, int inNumSamples)
+{
+	ZOUT0(0) = 0.f; // always output zero
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -2354,6 +2374,7 @@ PluginLoad(Video)
 	DefineSimpleUnit(GLPrevFrame2);
 	DefineDtorUnit(GLRGB);
 	DefineDtorUnit(GLRGBA);
+	DefineSimpleUnit(GLAdd);
 	DefineDtorUnit(GLMix);
 	DefineDtorUnit(GLBlend);
 

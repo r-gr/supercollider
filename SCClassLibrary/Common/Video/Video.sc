@@ -76,6 +76,12 @@ GLRGBA : VideoUGen {
     }
 }
 
+GLAdd : VideoUGen {
+    *fr { arg in1, in2;
+        ^this.new(\control, in1, in2)
+    }
+}
+
 GLMix : VideoUGen {
     *fr { arg in1, in2, mix;
         ^this.new(\control, in1, in2, mix)
